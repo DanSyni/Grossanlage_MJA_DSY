@@ -1,0 +1,2256 @@
+﻿<CAEXFile SchemaVersion="3.0" FileName="Electrolyzer_PlantV04.aml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.dke.de/CAEX" xsi:schemaLocation="http://www.dke.de/CAEX CAEX_ClassModel_V.3.0.xsd">
+  <SuperiorStandardVersion>AutomationML 2.10</SuperiorStandardVersion>
+  <SourceDocumentInformation OriginName="AutomationML Editor" OriginID="916578CA-FE0D-474E-A4FC-9E1719892369" OriginVersion="5.6.10.0" LastWritingDateTime="2023-02-15T12:13:02.9744406+01:00" OriginProjectID="unspecified" OriginProjectTitle="unspecified" OriginRelease="5.6.10.0" OriginVendor="AutomationML e.V." OriginVendorURL="www.AutomationML.org" />
+  <InterfaceClassLib Name="AutomationMLInterfaceClassLib">
+    <Description>Standard Automation Markup Language Interface Class Library</Description>
+    <Version>2.2.5</Version>
+    <InterfaceClass Name="AutomationMLBaseInterface">
+      <InterfaceClass Name="Order" RefBaseClassPath="AutomationMLBaseInterface">
+        <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction" />
+      </InterfaceClass>
+      <InterfaceClass Name="Port" RefBaseClassPath="AutomationMLBaseInterface">
+        <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+          <Constraint Name="AllowedValues">
+            <NominalScaledType>
+              <RequiredValue>In</RequiredValue>
+              <RequiredValue>Out</RequiredValue>
+              <RequiredValue>InOut</RequiredValue>
+            </NominalScaledType>
+          </Constraint>
+        </Attribute>
+        <Attribute Name="Cardinality" RefAttributeType="AutomationMLBaseAttributeTypeLib/Cardinality">
+          <Attribute Name="MinOccur" AttributeDataType="xs:unsignedInt" />
+          <Attribute Name="MaxOccur" AttributeDataType="xs:unsignedInt" />
+        </Attribute>
+        <Attribute Name="Category" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Category" />
+      </InterfaceClass>
+      <InterfaceClass Name="PPRConnector" RefBaseClassPath="AutomationMLBaseInterface" />
+      <InterfaceClass Name="ExternalDataConnector" RefBaseClassPath="AutomationMLBaseInterface">
+        <Attribute Name="refURI" AttributeDataType="xs:anyURI" RefAttributeType="AutomationMLBaseAttributeTypeLib/refURI" />
+        <InterfaceClass Name="COLLADAInterface" RefBaseClassPath="ExternalDataConnector" />
+        <InterfaceClass Name="PLCopenXMLInterface" RefBaseClassPath="ExternalDataConnector" />
+        <InterfaceClass Name="ExternalDataReference" RefBaseClassPath="ExternalDataConnector">
+          <Attribute Name="MIMEType" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/MIMEType">
+            <Description>Multipurpose Internet Mail Extensions (MIME) sind Erweiterungen des Internetstandards RFC 822 (seit 2008 durch RFC 5322 ersetzt), der das Datenformat von E-Mails definiert</Description>
+          </Attribute>
+        </InterfaceClass>
+      </InterfaceClass>
+      <InterfaceClass Name="Communication" RefBaseClassPath="AutomationMLBaseInterface">
+        <InterfaceClass Name="SignalInterface" RefBaseClassPath="Communication" />
+      </InterfaceClass>
+    </InterfaceClass>
+  </InterfaceClassLib>
+  <InterfaceClassLib Name="InterfaceElektrolysisSystemClassLib">
+    <Version>0</Version>
+    <InterfaceClass Name="MediaSupply">
+      <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+        <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+          <Description>Welded, screwed etc.</Description>
+        </Attribute>
+        <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+          <Description>HoseDiameter</Description>
+          <DefaultValue>0</DefaultValue>
+        </Attribute>
+        <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+          <Constraint Name="AllowedValues">
+            <NominalScaledType>
+              <RequiredValue>In</RequiredValue>
+              <RequiredValue>Out</RequiredValue>
+              <RequiredValue>InOut</RequiredValue>
+            </NominalScaledType>
+          </Constraint>
+        </Attribute>
+        <Attribute Name="Length" AttributeDataType="xs:double" Unit="mm">
+          <Description>Length of line</Description>
+        </Attribute>
+        <Attribute Name="Material" AttributeDataType="xs:string">
+          <DefaultValue>Polyurethan</DefaultValue>
+          <Value></Value>
+        </Attribute>
+      </Attribute>
+      <Attribute Name="ConnectionPosition" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionPosition">
+        <Description>Connection Position</Description>
+        <Attribute Name="X" AttributeDataType="xs:double" Unit="mm">
+          <Description>X-Position of Connection</Description>
+        </Attribute>
+        <Attribute Name="Y" AttributeDataType="xs:double" Unit="mm">
+          <Description>Y-Position of Connection</Description>
+        </Attribute>
+        <Attribute Name="Z" AttributeDataType="xs:double" Unit="mm">
+          <Description>Z-Position of Connection</Description>
+        </Attribute>
+      </Attribute>
+    </InterfaceClass>
+  </InterfaceClassLib>
+  <RoleClassLib Name="AutomationMLBaseRoleClassLib">
+    <Description>Automation Markup Language base role class library</Description>
+    <Version>2.2.5</Version>
+    <RoleClass Name="AutomationMLBaseRole">
+      <RoleClass Name="Group" RefBaseClassPath="AutomationMLBaseRole">
+        <Attribute Name="AssociatedFacet" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/AssociatedFacet" />
+      </RoleClass>
+      <RoleClass Name="Facet" RefBaseClassPath="AutomationMLBaseRole" />
+      <RoleClass Name="Resource" RefBaseClassPath="AutomationMLBaseRole" />
+      <RoleClass Name="Product" RefBaseClassPath="AutomationMLBaseRole" />
+      <RoleClass Name="Process" RefBaseClassPath="AutomationMLBaseRole" />
+      <RoleClass Name="Structure" RefBaseClassPath="AutomationMLBaseRole">
+        <RoleClass Name="ProductStructure" RefBaseClassPath="Structure" />
+        <RoleClass Name="ProcessStructure" RefBaseClassPath="Structure" />
+        <RoleClass Name="ResourceStructure" RefBaseClassPath="Structure" />
+      </RoleClass>
+      <RoleClass Name="ExternalData" RefBaseClassPath="AutomationMLBaseRole" />
+    </RoleClass>
+  </RoleClassLib>
+  <RoleClassLib Name="ElektrolyzerRoleClassLib">
+    <Version>0</Version>
+    <RoleClass Name="ElectrolysisSystem">
+      <RoleClass Name="Elektrolyzer" RefBaseClassPath="AutomationMLBaseRoleClassLib/AutomationMLBaseRole/Product" />
+      <RoleClass Name="GasProcessing" RefBaseClassPath="AutomationMLBaseRoleClassLib/AutomationMLBaseRole/Product" />
+      <RoleClass Name="WaterTreatment" RefBaseClassPath="AutomationMLBaseRoleClassLib/AutomationMLBaseRole/Product" />
+      <RoleClass Name="Storage" RefBaseClassPath="AutomationMLBaseRoleClassLib/AutomationMLBaseRole/Product" />
+      <RoleClass Name="Monitoring" RefBaseClassPath="AutomationMLBaseRoleClassLib/AutomationMLBaseRole/Product" />
+      <RoleClass Name="PowerSupply" RefBaseClassPath="AutomationMLBaseRoleClassLib/AutomationMLBaseRole/Product" />
+      <RoleClass Name="Cooling" RefBaseClassPath="AutomationMLBaseRoleClassLib/AutomationMLBaseRole/Product" />
+    </RoleClass>
+  </RoleClassLib>
+  <SystemUnitClassLib Name="BopComponents">
+    <Version>0</Version>
+    <SystemUnitClass Name="ProcessControlUnit" ID="3e36fa3a-c8dc-4baf-887b-33fd27c1012f">
+      <Attribute Name="ComponentDimension" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ComponentDimension">
+        <Attribute Name="Length" AttributeDataType="xs:double" Unit="mm">
+          <Description>Length of an object</Description>
+          <DefaultValue>0</DefaultValue>
+        </Attribute>
+        <Attribute Name="Width" AttributeDataType="xs:double" Unit="mm">
+          <Description>Width of an object</Description>
+          <DefaultValue>0</DefaultValue>
+        </Attribute>
+        <Attribute Name="Heigth" AttributeDataType="xs:double" Unit="mm">
+          <Description>Heigth of an object</Description>
+          <DefaultValue>0</DefaultValue>
+        </Attribute>
+      </Attribute>
+      <Attribute Name="SafteyZone" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/SafteyZone">
+        <Attribute Name="RectSafteyZone" AttributeDataType="xs:double" Unit="m">
+          <Description>Rectangular around the container/Distance from container wall</Description>
+          <Value>1.56</Value>
+        </Attribute>
+        <Attribute Name="CircSaftyZone" AttributeDataType="xs:double" Unit="m">
+          <Description>Circular around the container/Distance from container wall</Description>
+        </Attribute>
+      </Attribute>
+      <ExternalInterface Name="DocumentInterfaces" ID="55a3a8ab-a6d0-44c5-8e25-e3dd31452849">
+        <ExternalInterface Name="CADDocument" ID="3d17855a-ad4b-4bbf-9efc-66c2d1d7fbf9" RefBaseClassPath="AutomationMLInterfaceClassLib/AutomationMLBaseInterface/ExternalDataConnector/COLLADAInterface">
+          <Attribute Name="refURI" AttributeDataType="xs:anyURI" RefAttributeType="AutomationMLBaseAttributeTypeLib/refURI" />
+        </ExternalInterface>
+        <ExternalInterface Name="PositionXML" ID="a151bf77-a2ee-4542-b774-962229fcf98a" RefBaseClassPath="AutomationMLInterfaceClassLib/AutomationMLBaseInterface/ExternalDataConnector/ExternalDataReference">
+          <Attribute Name="refURI" AttributeDataType="xs:anyURI" RefAttributeType="AutomationMLBaseAttributeTypeLib/refURI" />
+          <Attribute Name="MIMEType" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/MIMEType">
+            <Description>Multipurpose Internet Mail Extensions (MIME) sind Erweiterungen des Internetstandards RFC 822 (seit 2008 durch RFC 5322 ersetzt), der das Datenformat von E-Mails definiert</Description>
+          </Attribute>
+        </ExternalInterface>
+      </ExternalInterface>
+    </SystemUnitClass>
+    <SystemUnitClass Name="WaterSupply" ID="b554b7ce-9ebe-4b04-9be5-1e17b3c71575">
+      <Attribute Name="PowerConsumption" AttributeDataType="xs:double" Unit="kW">
+        <Value>50</Value>
+      </Attribute>
+      <Attribute Name="InFlowRate" AttributeDataType="xs:double" Unit="m^3/h">
+        <Description>Maximum inletwater flow requirement</Description>
+        <Value>45.4</Value>
+      </Attribute>
+      <Attribute Name="OutFlowRate" AttributeDataType="xs:double" Unit="m^3/h">
+        <Description>Maximum outlet water flow rate</Description>
+        <Value>40.8</Value>
+      </Attribute>
+      <Attribute Name="Weight" AttributeDataType="xs:double" Unit="kg">
+        <Value>2100</Value>
+      </Attribute>
+      <Attribute Name="PowerSupply" AttributeDataType="xs:string" Unit="V">
+        <Value>400</Value>
+      </Attribute>
+      <Attribute Name="Efficiency" AttributeDataType="xs:int" Unit="%">
+        <Value>90</Value>
+      </Attribute>
+      <Attribute Name="Height" AttributeDataType="xs:double" Unit="m">
+        <Value>2590</Value>
+      </Attribute>
+      <Attribute Name="Length" AttributeDataType="xs:double" Unit="m">
+        <Value>12190</Value>
+      </Attribute>
+      <Attribute Name="Width" AttributeDataType="xs:double" Unit="m">
+        <Value>2440</Value>
+      </Attribute>
+      <Attribute Name="SafteyZone" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/SafteyZone">
+        <Attribute Name="RectSafteyZone" AttributeDataType="xs:double" Unit="m">
+          <Description>Rectangular around the container/Distance from container wall</Description>
+          <Value>1.56</Value>
+        </Attribute>
+        <Attribute Name="CircSaftyZone" AttributeDataType="xs:double" Unit="m">
+          <Description>Circular around the container/Distance from container wall</Description>
+        </Attribute>
+      </Attribute>
+      <ExternalInterface Name="DocumentInterfaces" ID="b7e22ed1-6886-4b44-83f3-63c72fb4d10d">
+        <ExternalInterface Name="CADDocument" ID="616cb752-99fc-46b6-8697-5adb9eca87ba" RefBaseClassPath="AutomationMLInterfaceClassLib/AutomationMLBaseInterface/ExternalDataConnector/COLLADAInterface">
+          <Attribute Name="refURI" AttributeDataType="xs:anyURI" RefAttributeType="AutomationMLBaseAttributeTypeLib/refURI">
+            <Value>Container und Parameter/COLLADA_Daten/40er Wasseraufbereitung.dae</Value>
+          </Attribute>
+        </ExternalInterface>
+        <ExternalInterface Name="PositionXML" ID="406a79ea-465c-45d3-876b-400ebfa33c88" RefBaseClassPath="AutomationMLInterfaceClassLib/AutomationMLBaseInterface/ExternalDataConnector/ExternalDataReference">
+          <Attribute Name="refURI" AttributeDataType="xs:anyURI" RefAttributeType="AutomationMLBaseAttributeTypeLib/refURI">
+            <Value>Container und Parameter/40er Wasseraufbereitung-params.xml</Value>
+          </Attribute>
+          <Attribute Name="MIMEType" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/MIMEType">
+            <Description>Multipurpose Internet Mail Extensions (MIME) sind Erweiterungen des Internetstandards RFC 822 (seit 2008 durch RFC 5322 ersetzt), der das Datenformat von E-Mails definiert</Description>
+            <Value>text/xml</Value>
+          </Attribute>
+        </ExternalInterface>
+        <ExternalInterface Name="CADDocumentInventor" ID="9faf5e93-c58f-4888-8508-7c2660851cf3" RefBaseClassPath="AutomationMLInterfaceClassLib/AutomationMLBaseInterface/ExternalDataConnector/ExternalDataReference">
+          <Attribute Name="refURI" AttributeDataType="xs:anyURI" RefAttributeType="AutomationMLBaseAttributeTypeLib/refURI">
+            <Value>Container und Parameter/40er Wasseraufbereitung.ipt</Value>
+          </Attribute>
+          <Attribute Name="MIMEType" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/MIMEType">
+            <Description>Multipurpose Internet Mail Extensions (MIME) sind Erweiterungen des Internetstandards RFC 822 (seit 2008 durch RFC 5322 ersetzt), der das Datenformat von E-Mails definiert</Description>
+            <Value>Any file</Value>
+          </Attribute>
+        </ExternalInterface>
+      </ExternalInterface>
+      <ExternalInterface Name="CathodenWaterIn" ID="1c5349e4-97fa-434a-8d72-cef5ff51150b" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+        <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+          <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+            <Description>Welded, screwed etc.</Description>
+            <Value>Flanschverbindung</Value>
+          </Attribute>
+          <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+            <Description>HoseDiameter</Description>
+            <DefaultValue>0</DefaultValue>
+            <Value>32</Value>
+          </Attribute>
+          <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+            <Value>In</Value>
+            <Constraint Name="AllowedValues">
+              <NominalScaledType>
+                <RequiredValue>In</RequiredValue>
+                <RequiredValue>Out</RequiredValue>
+                <RequiredValue>InOut</RequiredValue>
+              </NominalScaledType>
+            </Constraint>
+          </Attribute>
+          <Attribute Name="Material" AttributeDataType="xs:string">
+            <Value>Edelstahl</Value>
+          </Attribute>
+        </Attribute>
+      </ExternalInterface>
+      <ExternalInterface Name="CondensedWaterIn" ID="f6c54e3e-fa2e-4896-85ff-1fe606653925" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+        <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+          <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+            <Description>Welded, screwed etc.</Description>
+            <Value>Flanschverbindung</Value>
+          </Attribute>
+          <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+            <Description>HoseDiameter</Description>
+            <DefaultValue>0</DefaultValue>
+            <Value>30</Value>
+          </Attribute>
+          <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+            <Value>In</Value>
+            <Constraint Name="AllowedValues">
+              <NominalScaledType>
+                <RequiredValue>In</RequiredValue>
+                <RequiredValue>Out</RequiredValue>
+                <RequiredValue>InOut</RequiredValue>
+              </NominalScaledType>
+            </Constraint>
+          </Attribute>
+          <Attribute Name="Material" AttributeDataType="xs:string">
+            <Value>Edelstahl</Value>
+          </Attribute>
+        </Attribute>
+      </ExternalInterface>
+      <ExternalInterface Name="CoolingIn" ID="6af07656-84ba-471b-921c-060a72c996d7" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+        <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+          <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+            <Description>Welded, screwed etc.</Description>
+            <Value>Flanschverbindung</Value>
+          </Attribute>
+          <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+            <Description>HoseDiameter</Description>
+            <DefaultValue>0</DefaultValue>
+            <Value>100</Value>
+          </Attribute>
+          <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+            <Value>In</Value>
+            <Constraint Name="AllowedValues">
+              <NominalScaledType>
+                <RequiredValue>In</RequiredValue>
+                <RequiredValue>Out</RequiredValue>
+                <RequiredValue>InOut</RequiredValue>
+              </NominalScaledType>
+            </Constraint>
+          </Attribute>
+          <Attribute Name="Material" AttributeDataType="xs:string">
+            <Value>Edelstahl</Value>
+          </Attribute>
+        </Attribute>
+      </ExternalInterface>
+      <ExternalInterface Name="CoolingOut" ID="5eabeefa-2dd2-4ac8-b10e-af91c41f761e" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+        <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+          <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+            <Description>Welded, screwed etc.</Description>
+            <Value>Flanschverbindung</Value>
+          </Attribute>
+          <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+            <Description>HoseDiameter</Description>
+            <DefaultValue>0</DefaultValue>
+            <Value>100</Value>
+          </Attribute>
+          <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+            <Value>Out</Value>
+            <Constraint Name="AllowedValues">
+              <NominalScaledType>
+                <RequiredValue>In</RequiredValue>
+                <RequiredValue>Out</RequiredValue>
+                <RequiredValue>InOut</RequiredValue>
+              </NominalScaledType>
+            </Constraint>
+          </Attribute>
+          <Attribute Name="Material" AttributeDataType="xs:string">
+            <Value>Edelstahl</Value>
+          </Attribute>
+        </Attribute>
+      </ExternalInterface>
+      <ExternalInterface Name="FreshWaterIn" ID="888978d9-7c26-4dae-918c-d4b7619319de" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+        <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+          <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+            <Description>Welded, screwed etc.</Description>
+            <Value>Flanschverbindung</Value>
+          </Attribute>
+          <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+            <Description>HoseDiameter</Description>
+            <DefaultValue>0</DefaultValue>
+            <Value>80</Value>
+          </Attribute>
+          <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+            <Value>In</Value>
+            <Constraint Name="AllowedValues">
+              <NominalScaledType>
+                <RequiredValue>In</RequiredValue>
+                <RequiredValue>Out</RequiredValue>
+                <RequiredValue>InOut</RequiredValue>
+              </NominalScaledType>
+            </Constraint>
+          </Attribute>
+          <Attribute Name="Material" AttributeDataType="xs:string">
+            <Value>Edelstahl</Value>
+          </Attribute>
+        </Attribute>
+      </ExternalInterface>
+      <ExternalInterface Name="PowerSupplyIn" ID="50218394-656f-42a8-9ea5-74abb74e8484" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+        <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+          <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+            <Description>Welded, screwed etc.</Description>
+          </Attribute>
+          <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+            <Description>HoseDiameter</Description>
+            <DefaultValue>0</DefaultValue>
+            <Value>50</Value>
+          </Attribute>
+          <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+            <Value>InOut</Value>
+            <Constraint Name="AllowedValues">
+              <NominalScaledType>
+                <RequiredValue>In</RequiredValue>
+                <RequiredValue>Out</RequiredValue>
+                <RequiredValue>InOut</RequiredValue>
+              </NominalScaledType>
+            </Constraint>
+          </Attribute>
+          <Attribute Name="Material" AttributeDataType="xs:string">
+            <Value>Kupfer</Value>
+          </Attribute>
+        </Attribute>
+      </ExternalInterface>
+      <ExternalInterface Name="ProcessWaterOut" ID="1fc4d102-f2c5-475a-912e-5dc1ba844775" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+        <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+          <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+            <Description>Welded, screwed etc.</Description>
+            <Value>Flanschverbindung</Value>
+          </Attribute>
+          <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+            <Description>HoseDiameter</Description>
+            <DefaultValue>0</DefaultValue>
+            <Value>25</Value>
+          </Attribute>
+          <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+            <Value>Out</Value>
+            <Constraint Name="AllowedValues">
+              <NominalScaledType>
+                <RequiredValue>In</RequiredValue>
+                <RequiredValue>Out</RequiredValue>
+                <RequiredValue>InOut</RequiredValue>
+              </NominalScaledType>
+            </Constraint>
+          </Attribute>
+          <Attribute Name="Material" AttributeDataType="xs:string">
+            <Value>Edelstahl</Value>
+          </Attribute>
+        </Attribute>
+      </ExternalInterface>
+      <ExternalInterface Name="WasteWaterOut" ID="fab6c138-9ace-425f-af00-33ed29a65dc3" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+        <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+          <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+            <Description>Welded, screwed etc.</Description>
+            <Value>Flanschverbindung</Value>
+          </Attribute>
+          <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+            <Description>HoseDiameter</Description>
+            <DefaultValue>0</DefaultValue>
+            <Value>40</Value>
+          </Attribute>
+          <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+            <Value>Out</Value>
+            <Constraint Name="AllowedValues">
+              <NominalScaledType>
+                <RequiredValue>In</RequiredValue>
+                <RequiredValue>Out</RequiredValue>
+                <RequiredValue>InOut</RequiredValue>
+              </NominalScaledType>
+            </Constraint>
+          </Attribute>
+          <Attribute Name="Material" AttributeDataType="xs:string">
+            <Value>Edelstahl</Value>
+          </Attribute>
+        </Attribute>
+      </ExternalInterface>
+      <SupportedRoleClass RefRoleClassPath="ElektrolyzerRoleClassLib/ElectrolysisSystem/WaterTreatment" />
+    </SystemUnitClass>
+    <SystemUnitClass Name="GasSystem" ID="8ce942b3-a39f-45b8-b197-bf529d70aed1">
+      <Attribute Name="InFlowRate" AttributeDataType="xs:double" Unit="m^3/h">
+        <Description>Maximum inletwater flow requirement</Description>
+        <Value>10000</Value>
+      </Attribute>
+      <Attribute Name="OutFlowRate" AttributeDataType="xs:double" Unit="m^3/h">
+        <Description>Maximum outlet water flow rate</Description>
+        <Value>9700</Value>
+      </Attribute>
+      <Attribute Name="Weight" AttributeDataType="xs:double" Unit="kg">
+        <Value>20000</Value>
+      </Attribute>
+      <Attribute Name="PowerConsumption" AttributeDataType="xs:double" Unit="kW">
+        <Value>50</Value>
+      </Attribute>
+      <Attribute Name="Length" AttributeDataType="xs:double" Unit="m">
+        <Value>12190</Value>
+      </Attribute>
+      <Attribute Name="Height" AttributeDataType="xs:double" Unit="m">
+        <Value>2590</Value>
+      </Attribute>
+      <Attribute Name="Width" AttributeDataType="xs:double" Unit="m">
+        <Value>2440</Value>
+      </Attribute>
+      <Attribute Name="SafteyZone" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/SafteyZone">
+        <Attribute Name="RectSafteyZone" AttributeDataType="xs:double" Unit="m">
+          <Description>Rectangular around the container/Distance from container wall</Description>
+          <Value>1.56</Value>
+        </Attribute>
+        <Attribute Name="CircSaftyZone" AttributeDataType="xs:double" Unit="m">
+          <Description>Circular around the container/Distance from container wall</Description>
+        </Attribute>
+      </Attribute>
+      <ExternalInterface Name="DocumentInterfaces" ID="efe3b4b6-289b-441b-a140-3d5b89bc326b">
+        <ExternalInterface Name="CADDocument" ID="b1490f78-92de-4a97-ac42-2ea12db7a6bb" RefBaseClassPath="AutomationMLInterfaceClassLib/AutomationMLBaseInterface/ExternalDataConnector/COLLADAInterface">
+          <Attribute Name="refURI" AttributeDataType="xs:anyURI" RefAttributeType="AutomationMLBaseAttributeTypeLib/refURI">
+            <Value>Container und Parameter/COLLADA_Daten/40er Gasaufbereitung.dae</Value>
+          </Attribute>
+        </ExternalInterface>
+        <ExternalInterface Name="PositionXML" ID="ff987405-7761-4b51-b97b-d609c6da07e8" RefBaseClassPath="AutomationMLInterfaceClassLib/AutomationMLBaseInterface/ExternalDataConnector/ExternalDataReference">
+          <Attribute Name="refURI" AttributeDataType="xs:anyURI" RefAttributeType="AutomationMLBaseAttributeTypeLib/refURI">
+            <Value>Container und Parameter/40er Gasaufbereitung-params.xml</Value>
+          </Attribute>
+          <Attribute Name="MIMEType" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/MIMEType">
+            <Description>Multipurpose Internet Mail Extensions (MIME) sind Erweiterungen des Internetstandards RFC 822 (seit 2008 durch RFC 5322 ersetzt), der das Datenformat von E-Mails definiert</Description>
+            <Value>text/xml</Value>
+          </Attribute>
+        </ExternalInterface>
+        <ExternalInterface Name="CADDocumentInventor" ID="740c9af4-63f0-478f-ae14-30b9005864ae" RefBaseClassPath="AutomationMLInterfaceClassLib/AutomationMLBaseInterface/ExternalDataConnector/ExternalDataReference">
+          <Attribute Name="refURI" AttributeDataType="xs:anyURI" RefAttributeType="AutomationMLBaseAttributeTypeLib/refURI">
+            <Value>Container und Parameter/40er Gasaufbereitung.ipt</Value>
+          </Attribute>
+          <Attribute Name="MIMEType" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/MIMEType">
+            <Description>Multipurpose Internet Mail Extensions (MIME) sind Erweiterungen des Internetstandards RFC 822 (seit 2008 durch RFC 5322 ersetzt), der das Datenformat von E-Mails definiert</Description>
+            <Value>Any file</Value>
+          </Attribute>
+        </ExternalInterface>
+      </ExternalInterface>
+      <ExternalInterface Name="CondensedWaterOut" ID="1ef05137-7a20-4d19-b6df-199c76a654ef" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+        <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+          <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+            <Description>Welded, screwed etc.</Description>
+            <Value>Flanschverbindung</Value>
+          </Attribute>
+          <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+            <Description>HoseDiameter</Description>
+            <DefaultValue>0</DefaultValue>
+            <Value>30</Value>
+          </Attribute>
+          <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+            <Value>Out</Value>
+            <Constraint Name="AllowedValues">
+              <NominalScaledType>
+                <RequiredValue>In</RequiredValue>
+                <RequiredValue>Out</RequiredValue>
+                <RequiredValue>InOut</RequiredValue>
+              </NominalScaledType>
+            </Constraint>
+          </Attribute>
+          <Attribute Name="Material" AttributeDataType="xs:string">
+            <Value>Edelstahl</Value>
+          </Attribute>
+        </Attribute>
+      </ExternalInterface>
+      <ExternalInterface Name="CoolingDryerIn" ID="a426f18f-a4ee-4e13-840c-33f6f69d599b" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+        <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+          <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+            <Description>Welded, screwed etc.</Description>
+            <Value>Flanschverbindung</Value>
+          </Attribute>
+          <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+            <Description>HoseDiameter</Description>
+            <DefaultValue>0</DefaultValue>
+            <Value>100</Value>
+          </Attribute>
+          <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+            <Value>In</Value>
+            <Constraint Name="AllowedValues">
+              <NominalScaledType>
+                <RequiredValue>In</RequiredValue>
+                <RequiredValue>Out</RequiredValue>
+                <RequiredValue>InOut</RequiredValue>
+              </NominalScaledType>
+            </Constraint>
+          </Attribute>
+          <Attribute Name="Material" AttributeDataType="xs:string">
+            <Value>Edelstahl</Value>
+          </Attribute>
+        </Attribute>
+      </ExternalInterface>
+      <ExternalInterface Name="CoolingDryerOut" ID="ee7daa43-f37f-4195-aefb-9c8445a2c321" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+        <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+          <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+            <Description>Welded, screwed etc.</Description>
+            <Value>Flanschverbindung</Value>
+          </Attribute>
+          <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+            <Description>HoseDiameter</Description>
+            <DefaultValue>0</DefaultValue>
+            <Value>100</Value>
+          </Attribute>
+          <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+            <Value>Out</Value>
+            <Constraint Name="AllowedValues">
+              <NominalScaledType>
+                <RequiredValue>In</RequiredValue>
+                <RequiredValue>Out</RequiredValue>
+                <RequiredValue>InOut</RequiredValue>
+              </NominalScaledType>
+            </Constraint>
+          </Attribute>
+          <Attribute Name="Material" AttributeDataType="xs:string">
+            <Value>Edelstahl</Value>
+          </Attribute>
+        </Attribute>
+      </ExternalInterface>
+      <ExternalInterface Name="HydrogenIn" ID="b072c0b8-40e2-49a3-99e3-35e523cee7f0" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+        <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+          <Attribute Name="AssamblyType" AttributeDataType="xs:string" Unit="SwageLok">
+            <Description>Welded, screwed etc.</Description>
+            <Value>Flanschverbindung</Value>
+          </Attribute>
+          <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+            <Description>HoseDiameter</Description>
+            <DefaultValue>0</DefaultValue>
+            <Value>25</Value>
+          </Attribute>
+          <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+            <Value>In</Value>
+            <Constraint Name="AllowedValues">
+              <NominalScaledType>
+                <RequiredValue>In</RequiredValue>
+                <RequiredValue>Out</RequiredValue>
+                <RequiredValue>InOut</RequiredValue>
+              </NominalScaledType>
+            </Constraint>
+          </Attribute>
+          <Attribute Name="Material" AttributeDataType="xs:string">
+            <Value>Edelstahl</Value>
+          </Attribute>
+        </Attribute>
+      </ExternalInterface>
+      <ExternalInterface Name="HydrogenOut" ID="6f837cb9-e13e-42fd-9ef1-b09a166ee6b3" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+        <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+          <Attribute Name="AssamblyType" AttributeDataType="xs:string" Unit="SwageLok">
+            <Description>Welded, screwed etc.</Description>
+            <Value>Flanschverbindung</Value>
+          </Attribute>
+          <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+            <Description>HoseDiameter</Description>
+            <DefaultValue>0</DefaultValue>
+            <Value>25</Value>
+          </Attribute>
+          <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+            <Value>Out</Value>
+            <Constraint Name="AllowedValues">
+              <NominalScaledType>
+                <RequiredValue>In</RequiredValue>
+                <RequiredValue>Out</RequiredValue>
+                <RequiredValue>InOut</RequiredValue>
+              </NominalScaledType>
+            </Constraint>
+          </Attribute>
+          <Attribute Name="Material" AttributeDataType="xs:string">
+            <Value>Edelstahl</Value>
+          </Attribute>
+        </Attribute>
+      </ExternalInterface>
+      <ExternalInterface Name="PowerSupplyIn" ID="08784af9-4ca9-46d3-87fd-059d9352feb5" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+        <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+          <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+            <Description>Welded, screwed etc.</Description>
+          </Attribute>
+          <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+            <Description>HoseDiameter</Description>
+            <DefaultValue>0</DefaultValue>
+            <Value>50</Value>
+          </Attribute>
+          <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+            <Value>InOut</Value>
+            <Constraint Name="AllowedValues">
+              <NominalScaledType>
+                <RequiredValue>In</RequiredValue>
+                <RequiredValue>Out</RequiredValue>
+                <RequiredValue>InOut</RequiredValue>
+              </NominalScaledType>
+            </Constraint>
+          </Attribute>
+          <Attribute Name="Material" AttributeDataType="xs:string">
+            <Value>Kupfer</Value>
+          </Attribute>
+        </Attribute>
+      </ExternalInterface>
+      <SupportedRoleClass RefRoleClassPath="ElektrolyzerRoleClassLib/ElectrolysisSystem/GasProcessing" />
+    </SystemUnitClass>
+    <SystemUnitClass Name="CoolingSystem" ID="a8ead314-2675-410c-9187-69338ff68fbc">
+      <Attribute Name="Weight" AttributeDataType="xs:double" Unit="kg">
+        <Value>12200</Value>
+      </Attribute>
+      <Attribute Name="InFlowRate" AttributeDataType="xs:double" Unit="m^3/h">
+        <Description>Maximum inletwater flow requirement</Description>
+        <Value>251.2</Value>
+      </Attribute>
+      <Attribute Name="OutFlowRate" AttributeDataType="xs:double" Unit="m^3/h">
+        <Description>Maximum outlet water flow rate</Description>
+        <Value>251.2</Value>
+      </Attribute>
+      <Attribute Name="MaxHeatDissipation" AttributeDataType="xs:double" Unit="MW">
+        <Description>ambient and cooling line</Description>
+        <Value>30</Value>
+      </Attribute>
+      <Attribute Name="PowerConsumption" AttributeDataType="xs:double" Unit="kW">
+        <Value>20</Value>
+      </Attribute>
+      <Attribute Name="Length" AttributeDataType="xs:double" Unit="m">
+        <Value>12190</Value>
+      </Attribute>
+      <Attribute Name="Height" AttributeDataType="xs:double" Unit="m">
+        <Value>2590</Value>
+      </Attribute>
+      <Attribute Name="Width" AttributeDataType="xs:double" Unit="m">
+        <Value>2440</Value>
+      </Attribute>
+      <Attribute Name="SafteyZone" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/SafteyZone">
+        <Attribute Name="RectSafteyZone" AttributeDataType="xs:double" Unit="m">
+          <Description>Rectangular around the container/Distance from container wall</Description>
+          <Value>1.56</Value>
+        </Attribute>
+        <Attribute Name="CircSaftyZone" AttributeDataType="xs:double" Unit="m">
+          <Description>Circular around the container/Distance from container wall</Description>
+        </Attribute>
+      </Attribute>
+      <ExternalInterface Name="DocumentInterfaces" ID="b112b6d1-c45b-4f78-a542-ffa1baacbbc9">
+        <ExternalInterface Name="CADDocument" ID="ad6f3a54-2cff-4c01-8cdc-4f0877895cbc" RefBaseClassPath="AutomationMLInterfaceClassLib/AutomationMLBaseInterface/ExternalDataConnector/COLLADAInterface">
+          <Attribute Name="refURI" AttributeDataType="xs:anyURI" RefAttributeType="AutomationMLBaseAttributeTypeLib/refURI">
+            <Value>Container und Parameter/COLLADA_Daten/40er Wärmestation.dae</Value>
+          </Attribute>
+        </ExternalInterface>
+        <ExternalInterface Name="PositionXML" ID="bc98e2ff-6529-4590-94b0-1154b9306d17" RefBaseClassPath="AutomationMLInterfaceClassLib/AutomationMLBaseInterface/ExternalDataConnector/ExternalDataReference">
+          <Attribute Name="refURI" AttributeDataType="xs:anyURI" RefAttributeType="AutomationMLBaseAttributeTypeLib/refURI">
+            <Value>Container und Parameter/40er Wärmestation-params.xml</Value>
+          </Attribute>
+          <Attribute Name="MIMEType" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/MIMEType">
+            <Description>Multipurpose Internet Mail Extensions (MIME) sind Erweiterungen des Internetstandards RFC 822 (seit 2008 durch RFC 5322 ersetzt), der das Datenformat von E-Mails definiert</Description>
+            <Value>text/xml</Value>
+          </Attribute>
+        </ExternalInterface>
+        <ExternalInterface Name="CADDocumentInventor" ID="4fef290f-e0b9-40f1-a6ec-57139ba7a1ce" RefBaseClassPath="AutomationMLInterfaceClassLib/AutomationMLBaseInterface/ExternalDataConnector/ExternalDataReference">
+          <Attribute Name="refURI" AttributeDataType="xs:anyURI" RefAttributeType="AutomationMLBaseAttributeTypeLib/refURI">
+            <Value>Container und Parameter/40er Wärmestation.ipt</Value>
+          </Attribute>
+          <Attribute Name="MIMEType" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/MIMEType">
+            <Description>Multipurpose Internet Mail Extensions (MIME) sind Erweiterungen des Internetstandards RFC 822 (seit 2008 durch RFC 5322 ersetzt), der das Datenformat von E-Mails definiert</Description>
+            <Value>Any file</Value>
+          </Attribute>
+        </ExternalInterface>
+      </ExternalInterface>
+      <ExternalInterface Name="CathodenWaterIn" ID="99413404-34b0-4e05-b5fe-48cd988c5aad" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+        <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+          <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+            <Description>Welded, screwed etc.</Description>
+            <Value>Pressverbindung</Value>
+          </Attribute>
+          <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+            <Description>HoseDiameter</Description>
+            <DefaultValue>0</DefaultValue>
+            <Value>32</Value>
+          </Attribute>
+          <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+            <Value>InOut</Value>
+            <Constraint Name="AllowedValues">
+              <NominalScaledType>
+                <RequiredValue>In</RequiredValue>
+                <RequiredValue>Out</RequiredValue>
+                <RequiredValue>InOut</RequiredValue>
+              </NominalScaledType>
+            </Constraint>
+          </Attribute>
+          <Attribute Name="Material" AttributeDataType="xs:string">
+            <Value>Edelstahl</Value>
+          </Attribute>
+        </Attribute>
+      </ExternalInterface>
+      <ExternalInterface Name="CathodenWaterOut" ID="afe7771a-b878-4a49-981b-482cc0956112" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+        <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+          <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+            <Description>Welded, screwed etc.</Description>
+            <Value>Pressverbindung</Value>
+          </Attribute>
+          <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+            <Description>HoseDiameter</Description>
+            <DefaultValue>0</DefaultValue>
+            <Value>32</Value>
+          </Attribute>
+          <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+            <Value>InOut</Value>
+            <Constraint Name="AllowedValues">
+              <NominalScaledType>
+                <RequiredValue>In</RequiredValue>
+                <RequiredValue>Out</RequiredValue>
+                <RequiredValue>InOut</RequiredValue>
+              </NominalScaledType>
+            </Constraint>
+          </Attribute>
+          <Attribute Name="Material" AttributeDataType="xs:string">
+            <Value>Edelstahl</Value>
+          </Attribute>
+        </Attribute>
+      </ExternalInterface>
+      <ExternalInterface Name="CoolingIn" ID="5f4f2714-500f-47e1-ad35-b46ff4d7cc4e" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+        <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+          <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+            <Description>Welded, screwed etc.</Description>
+            <Value>Pressverbindung</Value>
+          </Attribute>
+          <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+            <Description>HoseDiameter</Description>
+            <DefaultValue>0</DefaultValue>
+            <Value>100</Value>
+          </Attribute>
+          <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+            <Value>InOut</Value>
+            <Constraint Name="AllowedValues">
+              <NominalScaledType>
+                <RequiredValue>In</RequiredValue>
+                <RequiredValue>Out</RequiredValue>
+                <RequiredValue>InOut</RequiredValue>
+              </NominalScaledType>
+            </Constraint>
+          </Attribute>
+          <Attribute Name="Material" AttributeDataType="xs:string">
+            <Value>Edelstahl</Value>
+          </Attribute>
+        </Attribute>
+      </ExternalInterface>
+      <ExternalInterface Name="CoolingDryerIn" ID="3a11efc9-bdea-43b3-9988-6ca66c5b097b" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+        <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+          <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+            <Description>Welded, screwed etc.</Description>
+            <Value>Pressverbindung</Value>
+          </Attribute>
+          <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+            <Description>HoseDiameter</Description>
+            <DefaultValue>0</DefaultValue>
+            <Value>100</Value>
+          </Attribute>
+          <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+            <Value>InOut</Value>
+            <Constraint Name="AllowedValues">
+              <NominalScaledType>
+                <RequiredValue>In</RequiredValue>
+                <RequiredValue>Out</RequiredValue>
+                <RequiredValue>InOut</RequiredValue>
+              </NominalScaledType>
+            </Constraint>
+          </Attribute>
+          <Attribute Name="Material" AttributeDataType="xs:string">
+            <Value>Edelstahl</Value>
+          </Attribute>
+        </Attribute>
+      </ExternalInterface>
+      <ExternalInterface Name="CoolingOut" ID="83a90a48-58d9-4ad6-9f1b-2fa852ea42af" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+        <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+          <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+            <Description>Welded, screwed etc.</Description>
+            <Value>Pressverbindung</Value>
+          </Attribute>
+          <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+            <Description>HoseDiameter</Description>
+            <DefaultValue>0</DefaultValue>
+            <Value>100</Value>
+          </Attribute>
+          <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+            <Value>InOut</Value>
+            <Constraint Name="AllowedValues">
+              <NominalScaledType>
+                <RequiredValue>In</RequiredValue>
+                <RequiredValue>Out</RequiredValue>
+                <RequiredValue>InOut</RequiredValue>
+              </NominalScaledType>
+            </Constraint>
+          </Attribute>
+          <Attribute Name="Material" AttributeDataType="xs:string">
+            <Value>Edelstahl</Value>
+          </Attribute>
+        </Attribute>
+      </ExternalInterface>
+      <ExternalInterface Name="CoolingDryerOut" ID="23740461-c1dd-44b3-aa98-72e4d2ad695c" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+        <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+          <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+            <Description>Welded, screwed etc.</Description>
+            <Value>Pressverbindung</Value>
+          </Attribute>
+          <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+            <Description>HoseDiameter</Description>
+            <DefaultValue>0</DefaultValue>
+            <Value>100</Value>
+          </Attribute>
+          <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+            <Value>InOut</Value>
+            <Constraint Name="AllowedValues">
+              <NominalScaledType>
+                <RequiredValue>In</RequiredValue>
+                <RequiredValue>Out</RequiredValue>
+                <RequiredValue>InOut</RequiredValue>
+              </NominalScaledType>
+            </Constraint>
+          </Attribute>
+          <Attribute Name="Material" AttributeDataType="xs:string">
+            <Value>Edelstahl</Value>
+          </Attribute>
+        </Attribute>
+      </ExternalInterface>
+      <ExternalInterface Name="PowerSupplyIn" ID="c48ce2e3-eb46-4eb7-a40e-1325f5d609df" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+        <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+          <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+            <Description>Welded, screwed etc.</Description>
+          </Attribute>
+          <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+            <Description>HoseDiameter</Description>
+            <DefaultValue>0</DefaultValue>
+            <Value>50</Value>
+          </Attribute>
+          <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+            <Value>InOut</Value>
+            <Constraint Name="AllowedValues">
+              <NominalScaledType>
+                <RequiredValue>In</RequiredValue>
+                <RequiredValue>Out</RequiredValue>
+                <RequiredValue>InOut</RequiredValue>
+              </NominalScaledType>
+            </Constraint>
+          </Attribute>
+          <Attribute Name="Material" AttributeDataType="xs:string">
+            <Value>Kupfer</Value>
+          </Attribute>
+        </Attribute>
+      </ExternalInterface>
+      <SupportedRoleClass RefRoleClassPath="ElektrolyzerRoleClassLib/ElectrolysisSystem/Cooling" />
+    </SystemUnitClass>
+    <SystemUnitClass Name="PowerSupply" ID="a3dab17e-cd19-45b6-9a77-9ca6f970d1c6">
+      <Attribute Name="Weight" AttributeDataType="xs:double" Unit="kg">
+        <Value>26740</Value>
+      </Attribute>
+      <Attribute Name="PowerSupply" AttributeDataType="xs:double" Unit="kV">
+        <Value>52</Value>
+      </Attribute>
+      <Attribute Name="OutPower" AttributeDataType="xs:string" Unit="MW">
+        <Value>5</Value>
+      </Attribute>
+      <Attribute Name="Length" AttributeDataType="xs:double" Unit="m">
+        <Value>12190</Value>
+      </Attribute>
+      <Attribute Name="Height" AttributeDataType="xs:double" Unit="m">
+        <Value>2590</Value>
+      </Attribute>
+      <Attribute Name="Width" AttributeDataType="xs:double" Unit="m">
+        <Value>2440</Value>
+      </Attribute>
+      <Attribute Name="SafteyZone" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/SafteyZone">
+        <Attribute Name="RectSafteyZone" AttributeDataType="xs:double" Unit="m">
+          <Description>Rectangular around the container/Distance from container wall</Description>
+          <Value>1.56</Value>
+        </Attribute>
+        <Attribute Name="CircSaftyZone" AttributeDataType="xs:double" Unit="m">
+          <Description>Circular around the container/Distance from container wall</Description>
+        </Attribute>
+      </Attribute>
+      <ExternalInterface Name="DocumentInterfaces" ID="cd4daab7-844f-4f95-b7d7-97e9ee642d78">
+        <ExternalInterface Name="CADDocument" ID="c63e393e-1e31-49e8-a637-b89992043755" RefBaseClassPath="AutomationMLInterfaceClassLib/AutomationMLBaseInterface/ExternalDataConnector/COLLADAInterface">
+          <Attribute Name="refURI" AttributeDataType="xs:anyURI" RefAttributeType="AutomationMLBaseAttributeTypeLib/refURI">
+            <Value>Container und Parameter/COLLADA_Daten/40er Stromversorgung.dae</Value>
+          </Attribute>
+        </ExternalInterface>
+        <ExternalInterface Name="PositionXML" ID="8d4b4b49-2a8b-41bb-a23e-6516fd2af8f4" RefBaseClassPath="AutomationMLInterfaceClassLib/AutomationMLBaseInterface/ExternalDataConnector/ExternalDataReference">
+          <Attribute Name="refURI" AttributeDataType="xs:anyURI" RefAttributeType="AutomationMLBaseAttributeTypeLib/refURI">
+            <Value>Container und Parameter/40er Stromversorgung-params.xml</Value>
+          </Attribute>
+          <Attribute Name="MIMEType" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/MIMEType">
+            <Description>Multipurpose Internet Mail Extensions (MIME) sind Erweiterungen des Internetstandards RFC 822 (seit 2008 durch RFC 5322 ersetzt), der das Datenformat von E-Mails definiert</Description>
+            <Value>text/xml</Value>
+          </Attribute>
+        </ExternalInterface>
+        <ExternalInterface Name="CADDocumentInventor" ID="3390f7e2-1f79-40fd-8eb8-c521a20f91af" RefBaseClassPath="AutomationMLInterfaceClassLib/AutomationMLBaseInterface/ExternalDataConnector/ExternalDataReference">
+          <Attribute Name="refURI" AttributeDataType="xs:anyURI" RefAttributeType="AutomationMLBaseAttributeTypeLib/refURI">
+            <Value>Container und Parameter/40er Stromversorgung.ipt</Value>
+          </Attribute>
+          <Attribute Name="MIMEType" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/MIMEType">
+            <Description>Multipurpose Internet Mail Extensions (MIME) sind Erweiterungen des Internetstandards RFC 822 (seit 2008 durch RFC 5322 ersetzt), der das Datenformat von E-Mails definiert</Description>
+            <Value>Any file</Value>
+          </Attribute>
+        </ExternalInterface>
+      </ExternalInterface>
+      <ExternalInterface Name="PowerIn1" ID="a4b26760-e917-4b89-aa12-f5553c571d43" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+        <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+          <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+            <Description>Welded, screwed etc.</Description>
+          </Attribute>
+          <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+            <Description>HoseDiameter</Description>
+            <DefaultValue>0</DefaultValue>
+            <Value>50</Value>
+          </Attribute>
+          <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+            <Value>InOut</Value>
+            <Constraint Name="AllowedValues">
+              <NominalScaledType>
+                <RequiredValue>In</RequiredValue>
+                <RequiredValue>Out</RequiredValue>
+                <RequiredValue>InOut</RequiredValue>
+              </NominalScaledType>
+            </Constraint>
+          </Attribute>
+          <Attribute Name="Material" AttributeDataType="xs:string">
+            <Value>Kupfer</Value>
+          </Attribute>
+        </Attribute>
+      </ExternalInterface>
+      <ExternalInterface Name="PowerOut1" ID="7bc3e80e-a389-42c0-a65b-7df989d03273" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+        <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+          <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+            <Description>Welded, screwed etc.</Description>
+          </Attribute>
+          <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+            <Description>HoseDiameter</Description>
+            <DefaultValue>0</DefaultValue>
+            <Value>50</Value>
+          </Attribute>
+          <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+            <Value>InOut</Value>
+            <Constraint Name="AllowedValues">
+              <NominalScaledType>
+                <RequiredValue>In</RequiredValue>
+                <RequiredValue>Out</RequiredValue>
+                <RequiredValue>InOut</RequiredValue>
+              </NominalScaledType>
+            </Constraint>
+          </Attribute>
+          <Attribute Name="Material" AttributeDataType="xs:string">
+            <Value>Kupfer</Value>
+          </Attribute>
+        </Attribute>
+      </ExternalInterface>
+      <ExternalInterface Name="PowerOut2" ID="61f18253-76cb-4686-928b-73beaf6d87bb" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+        <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+          <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+            <Description>Welded, screwed etc.</Description>
+          </Attribute>
+          <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+            <Description>HoseDiameter</Description>
+            <DefaultValue>0</DefaultValue>
+            <Value>50</Value>
+          </Attribute>
+          <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+            <Value>InOut</Value>
+            <Constraint Name="AllowedValues">
+              <NominalScaledType>
+                <RequiredValue>In</RequiredValue>
+                <RequiredValue>Out</RequiredValue>
+                <RequiredValue>InOut</RequiredValue>
+              </NominalScaledType>
+            </Constraint>
+          </Attribute>
+          <Attribute Name="Material" AttributeDataType="xs:string">
+            <Value>Kupfer</Value>
+          </Attribute>
+        </Attribute>
+      </ExternalInterface>
+      <ExternalInterface Name="PowerOut3" ID="268edfa4-219d-429a-83ca-855636fbb67c" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+        <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+          <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+            <Description>Welded, screwed etc.</Description>
+          </Attribute>
+          <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+            <Description>HoseDiameter</Description>
+            <DefaultValue>0</DefaultValue>
+            <Value>50</Value>
+          </Attribute>
+          <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+            <Value>InOut</Value>
+            <Constraint Name="AllowedValues">
+              <NominalScaledType>
+                <RequiredValue>In</RequiredValue>
+                <RequiredValue>Out</RequiredValue>
+                <RequiredValue>InOut</RequiredValue>
+              </NominalScaledType>
+            </Constraint>
+          </Attribute>
+          <Attribute Name="Material" AttributeDataType="xs:string">
+            <Value>Kupfer</Value>
+          </Attribute>
+        </Attribute>
+      </ExternalInterface>
+      <ExternalInterface Name="PowerOut4" ID="693a2d43-f782-423c-9ef7-f616aa34e644" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+        <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+          <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+            <Description>Welded, screwed etc.</Description>
+          </Attribute>
+          <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+            <Description>HoseDiameter</Description>
+            <DefaultValue>0</DefaultValue>
+            <Value>50</Value>
+          </Attribute>
+          <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+            <Value>InOut</Value>
+            <Constraint Name="AllowedValues">
+              <NominalScaledType>
+                <RequiredValue>In</RequiredValue>
+                <RequiredValue>Out</RequiredValue>
+                <RequiredValue>InOut</RequiredValue>
+              </NominalScaledType>
+            </Constraint>
+          </Attribute>
+          <Attribute Name="Material" AttributeDataType="xs:string">
+            <Value>Kupfer</Value>
+          </Attribute>
+        </Attribute>
+      </ExternalInterface>
+      <SupportedRoleClass RefRoleClassPath="ElektrolyzerRoleClassLib/ElectrolysisSystem/PowerSupply" />
+    </SystemUnitClass>
+  </SystemUnitClassLib>
+  <SystemUnitClassLib Name="Container">
+    <Version>0</Version>
+    <SystemUnitClass Name="40ft_Container" ID="101bedd8-dfcb-44cc-b7de-8ed4387af957">
+      <Attribute Name="ComponentDimension" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ComponentDimension">
+        <Attribute Name="Heigth" AttributeDataType="xs:double" Unit="mm">
+          <Description>Heigth of an object</Description>
+          <DefaultValue>0</DefaultValue>
+          <Value>2590</Value>
+        </Attribute>
+        <Attribute Name="Length" AttributeDataType="xs:double" Unit="mm">
+          <Description>Length of an object</Description>
+          <DefaultValue>0</DefaultValue>
+          <Value>12190</Value>
+        </Attribute>
+        <Attribute Name="Width" AttributeDataType="xs:double" Unit="mm">
+          <Description>Width of an object</Description>
+          <DefaultValue>0</DefaultValue>
+          <Value>2440</Value>
+        </Attribute>
+      </Attribute>
+      <Attribute Name="Weight" AttributeDataType="xs:string" RefAttributeType="ContainerAttributeTypeLib/Weight">
+        <Attribute Name="DeadWeight" AttributeDataType="xs:double" Unit="kg">
+          <DefaultValue>0</DefaultValue>
+          <Value>3740</Value>
+        </Attribute>
+        <Attribute Name="MaxWeight" AttributeDataType="xs:double" Unit="kg">
+          <DefaultValue>0</DefaultValue>
+          <Value>30480</Value>
+        </Attribute>
+      </Attribute>
+    </SystemUnitClass>
+    <SystemUnitClass Name="20ft_Container" ID="4d8132d2-b9a3-4d5a-a5b1-04e790ba954a">
+      <Attribute Name="ComponentDimension" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ComponentDimension">
+        <Attribute Name="Heigth" AttributeDataType="xs:double" Unit="mm">
+          <Description>Heigth of an object</Description>
+          <DefaultValue>0</DefaultValue>
+          <Value>2590</Value>
+        </Attribute>
+        <Attribute Name="Length" AttributeDataType="xs:double" Unit="mm">
+          <Description>Length of an object</Description>
+          <DefaultValue>0</DefaultValue>
+          <Value>6060</Value>
+        </Attribute>
+        <Attribute Name="Width" AttributeDataType="xs:double" Unit="mm">
+          <Description>Width of an object</Description>
+          <DefaultValue>0</DefaultValue>
+          <Value>2440</Value>
+        </Attribute>
+      </Attribute>
+      <Attribute Name="Weight" AttributeDataType="xs:string" RefAttributeType="ContainerAttributeTypeLib/Weight">
+        <Attribute Name="DeadWeight" AttributeDataType="xs:double" Unit="kg">
+          <DefaultValue>0</DefaultValue>
+          <Value>2250</Value>
+        </Attribute>
+        <Attribute Name="MaxWeight" AttributeDataType="xs:double" Unit="kg">
+          <DefaultValue>0</DefaultValue>
+          <Value>30480</Value>
+        </Attribute>
+      </Attribute>
+    </SystemUnitClass>
+  </SystemUnitClassLib>
+  <SystemUnitClassLib Name="ElectrolyzerComponents">
+    <Version>0</Version>
+    <SystemUnitClass Name="AEM" ID="506b2ec5-2fde-4ee1-82a7-005c0b3b9c0f">
+      <SystemUnitClass Name="EnapterSkid" ID="c1fcb7b4-4b00-447c-9ef3-971d2feb03ee">
+        <Attribute Name="TechnicalAttributesEl" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/TechnicalAttributesEl">
+          <Attribute Name="CoolingWaterFlow" AttributeDataType="xs:double" Unit="L/h">
+            <Value>1000</Value>
+          </Attribute>
+          <Attribute Name="CoolingWaterTempRange" AttributeDataType="xs:int" Unit="°C" />
+          <Attribute Name="CoolingWaterPressureRange" AttributeDataType="xs:double" Unit="bar" />
+          <Attribute Name="MaxHeatDissipation" AttributeDataType="xs:double" Unit="MW">
+            <Description>ambient and cooling line</Description>
+            <Value>0.37512</Value>
+          </Attribute>
+          <Attribute Name="MaxWaterConductivity" AttributeDataType="xs:string" Unit="µS/cm at 25°C">
+            <Value>5</Value>
+          </Attribute>
+          <Attribute Name="NominalPowerConsumption" AttributeDataType="xs:double" Unit="kWh/Nm³">
+            <Description>Nominal power consumption per Nm³ of H₂ produced</Description>
+            <Value>4.798</Value>
+          </Attribute>
+          <Attribute Name="OperativeTempRange" AttributeDataType="xs:int" Unit="°C">
+            <Value>55</Value>
+          </Attribute>
+          <Attribute Name="PowerConsumption" AttributeDataType="xs:double" Unit="MW">
+            <Value>2.5</Value>
+          </Attribute>
+          <Attribute Name="PowerSupply" AttributeDataType="xs:string" Unit="V">
+            <Value>400</Value>
+          </Attribute>
+          <Attribute Name="ProductionRate" AttributeDataType="xs:double" Unit="Nm³/h">
+            <Value>521</Value>
+          </Attribute>
+          <Attribute Name="UnitsInsideContainer" AttributeDataType="xs:int" Unit="U">
+            <Value>1042</Value>
+          </Attribute>
+          <Attribute Name="WasteWaterOutput" AttributeDataType="xs:double" Unit="L/h">
+            <Value>0</Value>
+          </Attribute>
+          <Attribute Name="WaterConsumption" AttributeDataType="xs:double" Unit="L/h">
+            <Value>416.8</Value>
+          </Attribute>
+          <Attribute Name="WaterInputPressureRange" AttributeDataType="xs:double" Unit="bar">
+            <Value>6</Value>
+          </Attribute>
+          <Attribute Name="Weight" AttributeDataType="xs:double" Unit="kg">
+            <Value>26260</Value>
+          </Attribute>
+          <Attribute Name="Length" AttributeDataType="xs:double" Unit="m">
+            <Value>12190</Value>
+          </Attribute>
+          <Attribute Name="Height" AttributeDataType="xs:double" Unit="m">
+            <Value>2590</Value>
+          </Attribute>
+          <Attribute Name="Width" AttributeDataType="xs:double" Unit="m">
+            <Value>2440</Value>
+          </Attribute>
+        </Attribute>
+        <Attribute Name="SafteyZone" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/SafteyZone">
+          <Attribute Name="RectSafteyZone" AttributeDataType="xs:double" Unit="m">
+            <Description>Rectangular around the container/Distance from container wall</Description>
+            <Value>1.56</Value>
+          </Attribute>
+          <Attribute Name="CircSaftyZone" AttributeDataType="xs:double" Unit="m">
+            <Description>Circular around the container/Distance from container wall</Description>
+          </Attribute>
+        </Attribute>
+        <ExternalInterface Name="DocumentInterfaces" ID="af86e5a0-153c-484f-8af8-eefd1843f891">
+          <ExternalInterface Name="CADDocument" ID="195a93b3-33c6-4ff5-9538-c516b7b8860e" RefBaseClassPath="AutomationMLInterfaceClassLib/AutomationMLBaseInterface/ExternalDataConnector/COLLADAInterface">
+            <Attribute Name="refURI" AttributeDataType="xs:anyURI" RefAttributeType="AutomationMLBaseAttributeTypeLib/refURI">
+              <Value>Container und Parameter/COLLADA_Daten/40er AEM-Skidmodul.dae</Value>
+            </Attribute>
+          </ExternalInterface>
+          <ExternalInterface Name="PositionXML" ID="a3e43d89-683f-474e-bf2e-c9964d58ea0f" RefBaseClassPath="AutomationMLInterfaceClassLib/AutomationMLBaseInterface/ExternalDataConnector/ExternalDataReference">
+            <Attribute Name="refURI" AttributeDataType="xs:anyURI" RefAttributeType="AutomationMLBaseAttributeTypeLib/refURI">
+              <Value>Container und Parameter/40er AEM-Skidmodul-params.xml</Value>
+            </Attribute>
+            <Attribute Name="MIMEType" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/MIMEType">
+              <Description>Multipurpose Internet Mail Extensions (MIME) sind Erweiterungen des Internetstandards RFC 822 (seit 2008 durch RFC 5322 ersetzt), der das Datenformat von E-Mails definiert</Description>
+              <Value>text/xml</Value>
+            </Attribute>
+          </ExternalInterface>
+          <ExternalInterface Name="CADDocumentInventor" ID="e19fc504-01c0-4fd7-8282-3a6fd6efd699" RefBaseClassPath="AutomationMLInterfaceClassLib/AutomationMLBaseInterface/ExternalDataConnector/ExternalDataReference">
+            <Attribute Name="refURI" AttributeDataType="xs:anyURI" RefAttributeType="AutomationMLBaseAttributeTypeLib/refURI">
+              <Value>Container und Parameter/40er AEM-Skidmodul.ipt</Value>
+            </Attribute>
+            <Attribute Name="MIMEType" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/MIMEType">
+              <Description>Multipurpose Internet Mail Extensions (MIME) sind Erweiterungen des Internetstandards RFC 822 (seit 2008 durch RFC 5322 ersetzt), der das Datenformat von E-Mails definiert</Description>
+              <Value>Any file</Value>
+            </Attribute>
+          </ExternalInterface>
+        </ExternalInterface>
+        <ExternalInterface Name="CathodenWaterOut" ID="083c7f72-f048-41e9-9c58-3d997a7f06bb" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+          <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+            <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+              <Description>Welded, screwed etc.</Description>
+              <Value>Pressverbindung</Value>
+            </Attribute>
+            <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+              <Description>HoseDiameter</Description>
+              <DefaultValue>0</DefaultValue>
+              <Value>32</Value>
+            </Attribute>
+            <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+              <Value>Out</Value>
+              <Constraint Name="AllowedValues">
+                <NominalScaledType>
+                  <RequiredValue>In</RequiredValue>
+                  <RequiredValue>Out</RequiredValue>
+                  <RequiredValue>InOut</RequiredValue>
+                </NominalScaledType>
+              </Constraint>
+            </Attribute>
+            <Attribute Name="Material" AttributeDataType="xs:string">
+              <Value>Edelstahl</Value>
+            </Attribute>
+          </Attribute>
+        </ExternalInterface>
+        <ExternalInterface Name="CoolingIn" ID="6db4af50-07f0-44b3-a4a2-e12c9e6fd999" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+          <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+            <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+              <Description>Welded, screwed etc.</Description>
+              <Value>Pressverbindung</Value>
+            </Attribute>
+            <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+              <Description>HoseDiameter</Description>
+              <DefaultValue>0</DefaultValue>
+              <Value>100</Value>
+            </Attribute>
+            <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+              <Value>InOut</Value>
+              <Constraint Name="AllowedValues">
+                <NominalScaledType>
+                  <RequiredValue>In</RequiredValue>
+                  <RequiredValue>Out</RequiredValue>
+                  <RequiredValue>InOut</RequiredValue>
+                </NominalScaledType>
+              </Constraint>
+            </Attribute>
+            <Attribute Name="Material" AttributeDataType="xs:string">
+              <Value>Edelstahl</Value>
+            </Attribute>
+          </Attribute>
+        </ExternalInterface>
+        <ExternalInterface Name="CoolingOut" ID="9209dbd0-825d-45e9-9a9a-8351f7b7338e" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+          <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+            <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+              <Description>Welded, screwed etc.</Description>
+              <Value>Pressverbindung</Value>
+            </Attribute>
+            <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+              <Description>HoseDiameter</Description>
+              <DefaultValue>0</DefaultValue>
+              <Value>100</Value>
+            </Attribute>
+            <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+              <Value>InOut</Value>
+              <Constraint Name="AllowedValues">
+                <NominalScaledType>
+                  <RequiredValue>In</RequiredValue>
+                  <RequiredValue>Out</RequiredValue>
+                  <RequiredValue>InOut</RequiredValue>
+                </NominalScaledType>
+              </Constraint>
+            </Attribute>
+            <Attribute Name="Material" AttributeDataType="xs:string">
+              <Value>Edelstahl</Value>
+            </Attribute>
+          </Attribute>
+        </ExternalInterface>
+        <ExternalInterface Name="HydrogenOut" ID="eb008829-c208-4684-b06c-75e6e1ef0048" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+          <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+            <Attribute Name="AssamblyType" AttributeDataType="xs:string" Unit="SwageLok">
+              <Description>Welded, screwed etc.</Description>
+              <Value>Verschraubt</Value>
+            </Attribute>
+            <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+              <Description>HoseDiameter</Description>
+              <DefaultValue>0</DefaultValue>
+              <Value>25</Value>
+            </Attribute>
+            <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+              <Value>Out</Value>
+              <Constraint Name="AllowedValues">
+                <NominalScaledType>
+                  <RequiredValue>In</RequiredValue>
+                  <RequiredValue>Out</RequiredValue>
+                  <RequiredValue>InOut</RequiredValue>
+                </NominalScaledType>
+              </Constraint>
+            </Attribute>
+            <Attribute Name="Material" AttributeDataType="xs:string">
+              <Value>Edelstahl</Value>
+            </Attribute>
+          </Attribute>
+        </ExternalInterface>
+        <ExternalInterface Name="NitrogenIn1" ID="287e40ec-bd22-4fbc-b668-4accda89d87d" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+          <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+            <Attribute Name="AssamblyType" AttributeDataType="xs:string" Unit="SwageLok">
+              <Description>Welded, screwed etc.</Description>
+              <Value>Verschraubt</Value>
+            </Attribute>
+            <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+              <Description>HoseDiameter</Description>
+              <DefaultValue>0</DefaultValue>
+              <Value>10</Value>
+            </Attribute>
+            <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+              <Value>In</Value>
+              <Constraint Name="AllowedValues">
+                <NominalScaledType>
+                  <RequiredValue>In</RequiredValue>
+                  <RequiredValue>Out</RequiredValue>
+                  <RequiredValue>InOut</RequiredValue>
+                </NominalScaledType>
+              </Constraint>
+            </Attribute>
+            <Attribute Name="Material" AttributeDataType="xs:string">
+              <Value>Edelstahl</Value>
+            </Attribute>
+          </Attribute>
+        </ExternalInterface>
+        <ExternalInterface Name="NitrogenIn2" ID="eb38bef9-dc33-4c8e-ab7d-1cc5be3d274b" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+          <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+            <Attribute Name="AssamblyType" AttributeDataType="xs:string" Unit="SwageLok">
+              <Description>Welded, screwed etc.</Description>
+              <Value>Verschraubt</Value>
+            </Attribute>
+            <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+              <Description>HoseDiameter</Description>
+              <DefaultValue>0</DefaultValue>
+              <Value>10</Value>
+            </Attribute>
+            <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+              <Value>In</Value>
+              <Constraint Name="AllowedValues">
+                <NominalScaledType>
+                  <RequiredValue>In</RequiredValue>
+                  <RequiredValue>Out</RequiredValue>
+                  <RequiredValue>InOut</RequiredValue>
+                </NominalScaledType>
+              </Constraint>
+            </Attribute>
+            <Attribute Name="Material" AttributeDataType="xs:string">
+              <Value>Edelstahl</Value>
+            </Attribute>
+          </Attribute>
+        </ExternalInterface>
+        <ExternalInterface Name="PowerSupplyIn" ID="07eb820f-55db-4902-8812-012ee2378355" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+          <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+            <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+              <Description>Welded, screwed etc.</Description>
+            </Attribute>
+            <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+              <Description>HoseDiameter</Description>
+              <DefaultValue>0</DefaultValue>
+              <Value>50</Value>
+            </Attribute>
+            <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+              <Value>InOut</Value>
+              <Constraint Name="AllowedValues">
+                <NominalScaledType>
+                  <RequiredValue>In</RequiredValue>
+                  <RequiredValue>Out</RequiredValue>
+                  <RequiredValue>InOut</RequiredValue>
+                </NominalScaledType>
+              </Constraint>
+            </Attribute>
+            <Attribute Name="Material" AttributeDataType="xs:string">
+              <Value>Kupfer</Value>
+            </Attribute>
+          </Attribute>
+        </ExternalInterface>
+        <ExternalInterface Name="WasteWaterOut" ID="cb1b30ab-b700-47e5-92e0-c21c104fa764" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+          <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+            <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+              <Description>Welded, screwed etc.</Description>
+              <Value>Pressverbindung</Value>
+            </Attribute>
+            <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+              <Description>HoseDiameter</Description>
+              <DefaultValue>0</DefaultValue>
+              <Value>5</Value>
+            </Attribute>
+            <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+              <Value>InOut</Value>
+              <Constraint Name="AllowedValues">
+                <NominalScaledType>
+                  <RequiredValue>In</RequiredValue>
+                  <RequiredValue>Out</RequiredValue>
+                  <RequiredValue>InOut</RequiredValue>
+                </NominalScaledType>
+              </Constraint>
+            </Attribute>
+            <Attribute Name="Material" AttributeDataType="xs:string">
+              <Value>Edelstahl</Value>
+            </Attribute>
+          </Attribute>
+        </ExternalInterface>
+        <ExternalInterface Name="ProcessWaterIn" ID="d70db477-bf6d-4b97-9d87-9b816d143ed1" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+          <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+            <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+              <Description>Welded, screwed etc.</Description>
+              <Value>Pressverbindung</Value>
+            </Attribute>
+            <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+              <Description>HoseDiameter</Description>
+              <DefaultValue>0</DefaultValue>
+              <Value>25</Value>
+            </Attribute>
+            <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+              <Value>In</Value>
+              <Constraint Name="AllowedValues">
+                <NominalScaledType>
+                  <RequiredValue>In</RequiredValue>
+                  <RequiredValue>Out</RequiredValue>
+                  <RequiredValue>InOut</RequiredValue>
+                </NominalScaledType>
+              </Constraint>
+            </Attribute>
+            <Attribute Name="Material" AttributeDataType="xs:string">
+              <Value>Edelstahl</Value>
+            </Attribute>
+          </Attribute>
+        </ExternalInterface>
+        <SupportedRoleClass RefRoleClassPath="ElektrolyzerRoleClassLib/ElectrolysisSystem/Elektrolyzer" />
+      </SystemUnitClass>
+    </SystemUnitClass>
+    <SystemUnitClass Name="PEM" ID="91ee93f2-2857-4291-bb89-c6127f0d741f">
+      <SystemUnitClass Name="HoellerSkid" ID="ac46fa3c-e4e4-4c9e-9cfa-b12069f7e2ab">
+        <Attribute Name="TechnicalAttributesEl" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/TechnicalAttributesEl">
+          <Attribute Name="MaxHeatDissipation" AttributeDataType="xs:double" Unit="MW">
+            <Description>ambient and cooling line</Description>
+            <Value>0.72</Value>
+          </Attribute>
+          <Attribute Name="MaxWaterConductivity" AttributeDataType="xs:string" Unit="µS/cm at 25°C">
+            <Value>0,1</Value>
+          </Attribute>
+          <Attribute Name="NominalPowerConsumption" AttributeDataType="xs:double" Unit="kWh/Nm³">
+            <Description>Nominal power consumption per Nm³ of H₂ produced</Description>
+            <Value>3.137</Value>
+          </Attribute>
+          <Attribute Name="OperativeTempRange" AttributeDataType="xs:int" Unit="°C">
+            <Value>80</Value>
+          </Attribute>
+          <Attribute Name="PowerConsumption" AttributeDataType="xs:double" Unit="MW">
+            <Value>3.2</Value>
+          </Attribute>
+          <Attribute Name="PowerSupply" AttributeDataType="xs:double" Unit="V" />
+          <Attribute Name="ProductionRate" AttributeDataType="xs:double" Unit="Nm³/h">
+            <Value>1020</Value>
+          </Attribute>
+          <Attribute Name="StacksInsideContainer" AttributeDataType="xs:int" Unit="U">
+            <Value>2</Value>
+          </Attribute>
+          <Attribute Name="WaterConsumption" AttributeDataType="xs:double" Unit="L/h">
+            <Value>830.4</Value>
+          </Attribute>
+          <Attribute Name="WaterInputPressureRange" AttributeDataType="xs:double" Unit="bar">
+            <Value>6</Value>
+          </Attribute>
+          <Attribute Name="WasteWaterOutput" AttributeDataType="xs:double" Unit="L/h">
+            <Value>38.28</Value>
+          </Attribute>
+          <Attribute Name="WaterOutCathode" AttributeDataType="xs:string" Unit="L/h">
+            <Value>6028,8</Value>
+          </Attribute>
+          <Attribute Name="Weight" AttributeDataType="xs:double" Unit="kg">
+            <Value>12000</Value>
+          </Attribute>
+          <Attribute Name="Length" AttributeDataType="xs:double" Unit="m">
+            <Value>12190</Value>
+          </Attribute>
+          <Attribute Name="Height" AttributeDataType="xs:double" Unit="m">
+            <Value>2590</Value>
+          </Attribute>
+          <Attribute Name="Width" AttributeDataType="xs:double" Unit="m">
+            <Value>2440</Value>
+          </Attribute>
+        </Attribute>
+        <Attribute Name="SafteyZone" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/SafteyZone">
+          <Attribute Name="RectSafteyZone" AttributeDataType="xs:double" Unit="m">
+            <Description>Rectangular around the container/Distance from container wall</Description>
+            <Value>1.56</Value>
+          </Attribute>
+          <Attribute Name="CircSaftyZone" AttributeDataType="xs:double" Unit="m">
+            <Description>Circular around the container/Distance from container wall</Description>
+          </Attribute>
+        </Attribute>
+        <ExternalInterface Name="DocumentInterfaces" ID="de7dcf10-bf7e-4f76-b78a-af938abd07f9">
+          <ExternalInterface Name="CADDocument" ID="d36c6d6a-dd85-414c-a39a-363655630b96" RefBaseClassPath="AutomationMLInterfaceClassLib/AutomationMLBaseInterface/ExternalDataConnector/COLLADAInterface">
+            <Attribute Name="refURI" AttributeDataType="xs:anyURI" RefAttributeType="AutomationMLBaseAttributeTypeLib/refURI">
+              <Value>Container und Parameter/COLLADA_Daten/40er PEM-Skidmodul.dae</Value>
+            </Attribute>
+          </ExternalInterface>
+          <ExternalInterface Name="PositionXML" ID="19191e6e-26d2-43b5-a051-e2569782be9b" RefBaseClassPath="AutomationMLInterfaceClassLib/AutomationMLBaseInterface/ExternalDataConnector/ExternalDataReference">
+            <Attribute Name="refURI" AttributeDataType="xs:anyURI" RefAttributeType="AutomationMLBaseAttributeTypeLib/refURI">
+              <Value>Container und Parameter/40er PEM-Skidmodul-params.xml</Value>
+            </Attribute>
+            <Attribute Name="MIMEType" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/MIMEType">
+              <Description>Multipurpose Internet Mail Extensions (MIME) sind Erweiterungen des Internetstandards RFC 822 (seit 2008 durch RFC 5322 ersetzt), der das Datenformat von E-Mails definiert</Description>
+              <Value>text/xml</Value>
+            </Attribute>
+          </ExternalInterface>
+          <ExternalInterface Name="CADDocumentInventor" ID="2e0e148f-f334-4abe-9326-1c0628db3c0a" RefBaseClassPath="AutomationMLInterfaceClassLib/AutomationMLBaseInterface/ExternalDataConnector/ExternalDataReference">
+            <Attribute Name="refURI" AttributeDataType="xs:anyURI" RefAttributeType="AutomationMLBaseAttributeTypeLib/refURI">
+              <Value>Container und Parameter/40er PEM-Skidmodul.ipt</Value>
+            </Attribute>
+            <Attribute Name="MIMEType" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/MIMEType">
+              <Description>Multipurpose Internet Mail Extensions (MIME) sind Erweiterungen des Internetstandards RFC 822 (seit 2008 durch RFC 5322 ersetzt), der das Datenformat von E-Mails definiert</Description>
+              <Value>Any file</Value>
+            </Attribute>
+          </ExternalInterface>
+        </ExternalInterface>
+        <ExternalInterface Name="CathodeWaterOut" ID="a5ef4766-ed78-48af-977c-429b8b8ad55b" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+          <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+            <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+              <Description>Welded, screwed etc.</Description>
+            </Attribute>
+            <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+              <Description>HoseDiameter</Description>
+              <DefaultValue>0</DefaultValue>
+              <Value>32</Value>
+            </Attribute>
+            <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+              <Constraint Name="AllowedValues">
+                <NominalScaledType>
+                  <RequiredValue>In</RequiredValue>
+                  <RequiredValue>Out</RequiredValue>
+                  <RequiredValue>InOut</RequiredValue>
+                </NominalScaledType>
+              </Constraint>
+            </Attribute>
+            <Attribute Name="Length" AttributeDataType="xs:double" Unit="mm">
+              <Description>Length of line</Description>
+            </Attribute>
+            <Attribute Name="Material" AttributeDataType="xs:string">
+              <DefaultValue>Polyurethan</DefaultValue>
+              <Value></Value>
+            </Attribute>
+          </Attribute>
+          <Attribute Name="ConnectionPosition" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionPosition">
+            <Description>Connection Position</Description>
+            <Attribute Name="X" AttributeDataType="xs:double" Unit="mm">
+              <Description>X-Position of Connection</Description>
+            </Attribute>
+            <Attribute Name="Y" AttributeDataType="xs:double" Unit="mm">
+              <Description>Y-Position of Connection</Description>
+            </Attribute>
+            <Attribute Name="Z" AttributeDataType="xs:double" Unit="mm">
+              <Description>Z-Position of Connection</Description>
+            </Attribute>
+          </Attribute>
+        </ExternalInterface>
+        <ExternalInterface Name="HydrogenOut" ID="8cbfa331-c10d-4ae5-8a20-8f751812f66c" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+          <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+            <Attribute Name="AssamblyType" AttributeDataType="xs:string" Unit="SwageLok">
+              <Description>Welded, screwed etc.</Description>
+              <Value>Verschraubt</Value>
+            </Attribute>
+            <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+              <Description>HoseDiameter</Description>
+              <DefaultValue>0</DefaultValue>
+              <Value>25</Value>
+            </Attribute>
+            <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+              <Value>Out</Value>
+              <Constraint Name="AllowedValues">
+                <NominalScaledType>
+                  <RequiredValue>In</RequiredValue>
+                  <RequiredValue>Out</RequiredValue>
+                  <RequiredValue>InOut</RequiredValue>
+                </NominalScaledType>
+              </Constraint>
+            </Attribute>
+            <Attribute Name="Material" AttributeDataType="xs:string">
+              <Value>Edelstahl</Value>
+            </Attribute>
+          </Attribute>
+        </ExternalInterface>
+        <ExternalInterface Name="NitrogenIn1" ID="4bd283fe-e41c-40af-af1b-aaada0b6c815" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+          <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+            <Attribute Name="AssamblyType" AttributeDataType="xs:string" Unit="SwageLok">
+              <Description>Welded, screwed etc.</Description>
+              <Value>Verschraubt</Value>
+            </Attribute>
+            <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+              <Description>HoseDiameter</Description>
+              <DefaultValue>0</DefaultValue>
+              <Value>10</Value>
+            </Attribute>
+            <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+              <Value>In</Value>
+              <Constraint Name="AllowedValues">
+                <NominalScaledType>
+                  <RequiredValue>In</RequiredValue>
+                  <RequiredValue>Out</RequiredValue>
+                  <RequiredValue>InOut</RequiredValue>
+                </NominalScaledType>
+              </Constraint>
+            </Attribute>
+            <Attribute Name="Material" AttributeDataType="xs:string">
+              <Value>Edelstahl</Value>
+            </Attribute>
+          </Attribute>
+        </ExternalInterface>
+        <ExternalInterface Name="NitrogenIn2" ID="592fade9-a7ca-49bc-a4c6-9638d041c9ff" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+          <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+            <Attribute Name="AssamblyType" AttributeDataType="xs:string" Unit="SwageLok">
+              <Description>Welded, screwed etc.</Description>
+              <Value>Verschraubt</Value>
+            </Attribute>
+            <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+              <Description>HoseDiameter</Description>
+              <DefaultValue>0</DefaultValue>
+              <Value>10</Value>
+            </Attribute>
+            <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+              <Value>In</Value>
+              <Constraint Name="AllowedValues">
+                <NominalScaledType>
+                  <RequiredValue>In</RequiredValue>
+                  <RequiredValue>Out</RequiredValue>
+                  <RequiredValue>InOut</RequiredValue>
+                </NominalScaledType>
+              </Constraint>
+            </Attribute>
+            <Attribute Name="Material" AttributeDataType="xs:string">
+              <Value>Edelstahl</Value>
+            </Attribute>
+          </Attribute>
+        </ExternalInterface>
+        <ExternalInterface Name="PowerSupplyIn" ID="a540a937-8a00-4711-aaa1-83258ffa114d" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+          <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+            <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+              <Description>Welded, screwed etc.</Description>
+            </Attribute>
+            <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+              <Description>HoseDiameter</Description>
+              <DefaultValue>0</DefaultValue>
+              <Value>50</Value>
+            </Attribute>
+            <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+              <Value>InOut</Value>
+              <Constraint Name="AllowedValues">
+                <NominalScaledType>
+                  <RequiredValue>In</RequiredValue>
+                  <RequiredValue>Out</RequiredValue>
+                  <RequiredValue>InOut</RequiredValue>
+                </NominalScaledType>
+              </Constraint>
+            </Attribute>
+            <Attribute Name="Material" AttributeDataType="xs:string">
+              <DefaultValue>Polyurethan</DefaultValue>
+              <Value></Value>
+            </Attribute>
+          </Attribute>
+        </ExternalInterface>
+        <ExternalInterface Name="WasteWaterOut" ID="cc6083a0-ec47-49d9-94aa-98eb2f6ada0e" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+          <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+            <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+              <Description>Welded, screwed etc.</Description>
+            </Attribute>
+            <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+              <Description>HoseDiameter</Description>
+              <DefaultValue>0</DefaultValue>
+              <Value>5</Value>
+            </Attribute>
+            <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+              <Constraint Name="AllowedValues">
+                <NominalScaledType>
+                  <RequiredValue>In</RequiredValue>
+                  <RequiredValue>Out</RequiredValue>
+                  <RequiredValue>InOut</RequiredValue>
+                </NominalScaledType>
+              </Constraint>
+            </Attribute>
+            <Attribute Name="Length" AttributeDataType="xs:double" Unit="mm">
+              <Description>Length of line</Description>
+            </Attribute>
+            <Attribute Name="Material" AttributeDataType="xs:string">
+              <DefaultValue>Polyurethan</DefaultValue>
+              <Value></Value>
+            </Attribute>
+          </Attribute>
+          <Attribute Name="ConnectionPosition" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionPosition">
+            <Description>Connection Position</Description>
+            <Attribute Name="X" AttributeDataType="xs:double" Unit="mm">
+              <Description>X-Position of Connection</Description>
+            </Attribute>
+            <Attribute Name="Y" AttributeDataType="xs:double" Unit="mm">
+              <Description>Y-Position of Connection</Description>
+            </Attribute>
+            <Attribute Name="Z" AttributeDataType="xs:double" Unit="mm">
+              <Description>Z-Position of Connection</Description>
+            </Attribute>
+          </Attribute>
+        </ExternalInterface>
+        <ExternalInterface Name="ProcessWaterIn" ID="deb226ee-e698-49dc-87b4-c73938534c09" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+          <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+            <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+              <Description>Welded, screwed etc.</Description>
+              <Value>Pressverbindung</Value>
+            </Attribute>
+            <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+              <Description>HoseDiameter</Description>
+              <DefaultValue>0</DefaultValue>
+              <Value>25</Value>
+            </Attribute>
+            <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+              <Value>In</Value>
+              <Constraint Name="AllowedValues">
+                <NominalScaledType>
+                  <RequiredValue>In</RequiredValue>
+                  <RequiredValue>Out</RequiredValue>
+                  <RequiredValue>InOut</RequiredValue>
+                </NominalScaledType>
+              </Constraint>
+            </Attribute>
+            <Attribute Name="Material" AttributeDataType="xs:string">
+              <Value>Edelstahl</Value>
+            </Attribute>
+          </Attribute>
+        </ExternalInterface>
+        <SupportedRoleClass RefRoleClassPath="ElektrolyzerRoleClassLib/ElectrolysisSystem/Elektrolyzer" />
+      </SystemUnitClass>
+      <SystemUnitClass Name="PlugpowerSkid" ID="da8f0dc1-ef72-4f6c-a25f-69d034d0c017">
+        <Attribute Name="TechnicalAttributesEl" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/TechnicalAttributesEl">
+          <Attribute Name="MaxHeatDissipation" AttributeDataType="xs:double" Unit="MW">
+            <Description>ambient and cooling line</Description>
+            <Value>0.75</Value>
+          </Attribute>
+          <Attribute Name="MaxWaterConductivity" AttributeDataType="xs:string" Unit="µS/cm at 25°C">
+            <Value>0,1</Value>
+          </Attribute>
+          <Attribute Name="NominalPowerConsumption" AttributeDataType="xs:double" Unit="kWh/Nm³">
+            <Description>Nominal power consumption per Nm³ of H₂ produced</Description>
+            <Value>4.762</Value>
+          </Attribute>
+          <Attribute Name="OperativeTempRange" AttributeDataType="xs:int" Unit="°C">
+            <Value>60</Value>
+          </Attribute>
+          <Attribute Name="PowerConsumption" AttributeDataType="xs:double" Unit="MW">
+            <Value>5</Value>
+          </Attribute>
+          <Attribute Name="PowerSupply" AttributeDataType="xs:double" Unit="V" />
+          <Attribute Name="ProductionRate" AttributeDataType="xs:double" Unit="Nm³/h">
+            <Value>1050</Value>
+          </Attribute>
+          <Attribute Name="StacksInsideContainer" AttributeDataType="xs:int" Unit="U">
+            <Value>5</Value>
+          </Attribute>
+          <Attribute Name="WaterConsumption" AttributeDataType="xs:double" Unit="L/h">
+            <Value>865</Value>
+          </Attribute>
+          <Attribute Name="WaterInputPressureRange" AttributeDataType="xs:double" Unit="bar">
+            <Value>6</Value>
+          </Attribute>
+          <Attribute Name="WasteWaterOutput" AttributeDataType="xs:double" Unit="L/h">
+            <Value>55</Value>
+          </Attribute>
+          <Attribute Name="WaterOutCathode" AttributeDataType="xs:string" Unit="L/h">
+            <Value>6280</Value>
+          </Attribute>
+          <Attribute Name="Weight" AttributeDataType="xs:double" Unit="kg">
+            <Value>12000</Value>
+          </Attribute>
+          <Attribute Name="Length" AttributeDataType="xs:double" Unit="m">
+            <Value>12190</Value>
+          </Attribute>
+          <Attribute Name="Height" AttributeDataType="xs:double" Unit="m">
+            <Value>2590</Value>
+          </Attribute>
+          <Attribute Name="Width" AttributeDataType="xs:double" Unit="m">
+            <Value>2440</Value>
+          </Attribute>
+        </Attribute>
+        <Attribute Name="SafteyZone" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/SafteyZone">
+          <Attribute Name="RectSafteyZone" AttributeDataType="xs:double" Unit="m">
+            <Description>Rectangular around the container/Distance from container wall</Description>
+            <Value>1.56</Value>
+          </Attribute>
+          <Attribute Name="CircSaftyZone" AttributeDataType="xs:double" Unit="m">
+            <Description>Circular around the container/Distance from container wall</Description>
+          </Attribute>
+        </Attribute>
+        <ExternalInterface Name="DocumentInterfaces" ID="ef280194-d595-4fc3-8142-fd634cfcbcf0">
+          <ExternalInterface Name="CADDocument" ID="58a5b832-12f1-4777-8d5f-451964f80d9d" RefBaseClassPath="AutomationMLInterfaceClassLib/AutomationMLBaseInterface/ExternalDataConnector/COLLADAInterface">
+            <Attribute Name="refURI" AttributeDataType="xs:anyURI" RefAttributeType="AutomationMLBaseAttributeTypeLib/refURI">
+              <Value>Container und Parameter/COLLADA_Daten/40er PEM-Skidmodul.dae</Value>
+            </Attribute>
+          </ExternalInterface>
+          <ExternalInterface Name="PositionXML" ID="55831222-81c1-408f-8e8c-a9f2d4eda573" RefBaseClassPath="AutomationMLInterfaceClassLib/AutomationMLBaseInterface/ExternalDataConnector/ExternalDataReference">
+            <Attribute Name="refURI" AttributeDataType="xs:anyURI" RefAttributeType="AutomationMLBaseAttributeTypeLib/refURI">
+              <Description>Container und Parameter/40er PEM-Skidmodul-params.xml</Description>
+              <Value>Container und Parameter/40er PEM-Skidmodul-params.xml</Value>
+            </Attribute>
+            <Attribute Name="MIMEType" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/MIMEType">
+              <Description>Multipurpose Internet Mail Extensions (MIME) sind Erweiterungen des Internetstandards RFC 822 (seit 2008 durch RFC 5322 ersetzt), der das Datenformat von E-Mails definiert</Description>
+              <Value>text/xml</Value>
+            </Attribute>
+          </ExternalInterface>
+          <ExternalInterface Name="CADDocumentInventor" ID="cfa9e2e0-2b21-4d9d-97d9-1e60c5b6743a" RefBaseClassPath="AutomationMLInterfaceClassLib/AutomationMLBaseInterface/ExternalDataConnector/ExternalDataReference">
+            <Attribute Name="refURI" AttributeDataType="xs:anyURI" RefAttributeType="AutomationMLBaseAttributeTypeLib/refURI">
+              <Value>Container und Parameter/40er PEM-Skidmodul.ipt</Value>
+            </Attribute>
+            <Attribute Name="MIMEType" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/MIMEType">
+              <Description>Multipurpose Internet Mail Extensions (MIME) sind Erweiterungen des Internetstandards RFC 822 (seit 2008 durch RFC 5322 ersetzt), der das Datenformat von E-Mails definiert</Description>
+              <Value>Any file</Value>
+            </Attribute>
+          </ExternalInterface>
+        </ExternalInterface>
+        <ExternalInterface Name="CathodeWaterOut" ID="0da06c48-5d7a-4819-8509-a63d94a037b7" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+          <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+            <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+              <Description>Welded, screwed etc.</Description>
+            </Attribute>
+            <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+              <Description>HoseDiameter</Description>
+              <DefaultValue>0</DefaultValue>
+              <Value>32</Value>
+            </Attribute>
+            <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+              <Constraint Name="AllowedValues">
+                <NominalScaledType>
+                  <RequiredValue>In</RequiredValue>
+                  <RequiredValue>Out</RequiredValue>
+                  <RequiredValue>InOut</RequiredValue>
+                </NominalScaledType>
+              </Constraint>
+            </Attribute>
+            <Attribute Name="Length" AttributeDataType="xs:double" Unit="mm">
+              <Description>Length of line</Description>
+            </Attribute>
+            <Attribute Name="Material" AttributeDataType="xs:string">
+              <DefaultValue>Polyurethan</DefaultValue>
+              <Value></Value>
+            </Attribute>
+          </Attribute>
+          <Attribute Name="ConnectionPosition" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionPosition">
+            <Description>Connection Position</Description>
+            <Attribute Name="X" AttributeDataType="xs:double" Unit="mm">
+              <Description>X-Position of Connection</Description>
+            </Attribute>
+            <Attribute Name="Y" AttributeDataType="xs:double" Unit="mm">
+              <Description>Y-Position of Connection</Description>
+            </Attribute>
+            <Attribute Name="Z" AttributeDataType="xs:double" Unit="mm">
+              <Description>Z-Position of Connection</Description>
+            </Attribute>
+          </Attribute>
+        </ExternalInterface>
+        <ExternalInterface Name="HydrogenOut" ID="bc1e4ca4-9ebc-4338-aace-0c16930035be" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+          <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+            <Attribute Name="AssamblyType" AttributeDataType="xs:string" Unit="SwageLok">
+              <Description>Welded, screwed etc.</Description>
+              <Value>Verschraubt</Value>
+            </Attribute>
+            <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+              <Description>HoseDiameter</Description>
+              <DefaultValue>0</DefaultValue>
+              <Value>25</Value>
+            </Attribute>
+            <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+              <Value>Out</Value>
+              <Constraint Name="AllowedValues">
+                <NominalScaledType>
+                  <RequiredValue>In</RequiredValue>
+                  <RequiredValue>Out</RequiredValue>
+                  <RequiredValue>InOut</RequiredValue>
+                </NominalScaledType>
+              </Constraint>
+            </Attribute>
+            <Attribute Name="Material" AttributeDataType="xs:string">
+              <Value>Edelstahl</Value>
+            </Attribute>
+          </Attribute>
+        </ExternalInterface>
+        <ExternalInterface Name="NitrogenIn1" ID="1e1b3272-bee7-4f2f-b302-a5bc57c33d74" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+          <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+            <Attribute Name="AssamblyType" AttributeDataType="xs:string" Unit="SwageLok">
+              <Description>Welded, screwed etc.</Description>
+              <Value>Verschraubt</Value>
+            </Attribute>
+            <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+              <Description>HoseDiameter</Description>
+              <DefaultValue>0</DefaultValue>
+              <Value>10</Value>
+            </Attribute>
+            <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+              <Value>In</Value>
+              <Constraint Name="AllowedValues">
+                <NominalScaledType>
+                  <RequiredValue>In</RequiredValue>
+                  <RequiredValue>Out</RequiredValue>
+                  <RequiredValue>InOut</RequiredValue>
+                </NominalScaledType>
+              </Constraint>
+            </Attribute>
+            <Attribute Name="Material" AttributeDataType="xs:string">
+              <Value>Edelstahl</Value>
+            </Attribute>
+          </Attribute>
+        </ExternalInterface>
+        <ExternalInterface Name="NitrogenIn2" ID="8d725376-0671-4285-88a1-febc619fb9d8" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+          <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+            <Attribute Name="AssamblyType" AttributeDataType="xs:string" Unit="SwageLok">
+              <Description>Welded, screwed etc.</Description>
+              <Value>Verschraubt</Value>
+            </Attribute>
+            <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+              <Description>HoseDiameter</Description>
+              <DefaultValue>0</DefaultValue>
+              <Value>10</Value>
+            </Attribute>
+            <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+              <Value>In</Value>
+              <Constraint Name="AllowedValues">
+                <NominalScaledType>
+                  <RequiredValue>In</RequiredValue>
+                  <RequiredValue>Out</RequiredValue>
+                  <RequiredValue>InOut</RequiredValue>
+                </NominalScaledType>
+              </Constraint>
+            </Attribute>
+            <Attribute Name="Material" AttributeDataType="xs:string">
+              <Value>Edelstahl</Value>
+            </Attribute>
+          </Attribute>
+        </ExternalInterface>
+        <ExternalInterface Name="PowerSupplyIn" ID="8440a38b-0dbf-42f4-a312-6e964ae0c94c" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+          <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+            <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+              <Description>Welded, screwed etc.</Description>
+            </Attribute>
+            <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+              <Description>HoseDiameter</Description>
+              <DefaultValue>0</DefaultValue>
+              <Value>50</Value>
+            </Attribute>
+            <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+              <Value>InOut</Value>
+              <Constraint Name="AllowedValues">
+                <NominalScaledType>
+                  <RequiredValue>In</RequiredValue>
+                  <RequiredValue>Out</RequiredValue>
+                  <RequiredValue>InOut</RequiredValue>
+                </NominalScaledType>
+              </Constraint>
+            </Attribute>
+            <Attribute Name="Material" AttributeDataType="xs:string">
+              <Value>Kupfer</Value>
+            </Attribute>
+          </Attribute>
+        </ExternalInterface>
+        <ExternalInterface Name="WasteWaterOut" ID="02eaa6bf-4ac7-4ada-994c-540b78179fc8" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+          <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+            <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+              <Description>Welded, screwed etc.</Description>
+            </Attribute>
+            <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+              <Description>HoseDiameter</Description>
+              <DefaultValue>0</DefaultValue>
+              <Value>5</Value>
+            </Attribute>
+            <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+              <Constraint Name="AllowedValues">
+                <NominalScaledType>
+                  <RequiredValue>In</RequiredValue>
+                  <RequiredValue>Out</RequiredValue>
+                  <RequiredValue>InOut</RequiredValue>
+                </NominalScaledType>
+              </Constraint>
+            </Attribute>
+            <Attribute Name="Length" AttributeDataType="xs:double" Unit="mm">
+              <Description>Length of line</Description>
+            </Attribute>
+            <Attribute Name="Material" AttributeDataType="xs:string">
+              <DefaultValue>Polyurethan</DefaultValue>
+              <Value></Value>
+            </Attribute>
+          </Attribute>
+          <Attribute Name="ConnectionPosition" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionPosition">
+            <Description>Connection Position</Description>
+            <Attribute Name="X" AttributeDataType="xs:double" Unit="mm">
+              <Description>X-Position of Connection</Description>
+            </Attribute>
+            <Attribute Name="Y" AttributeDataType="xs:double" Unit="mm">
+              <Description>Y-Position of Connection</Description>
+            </Attribute>
+            <Attribute Name="Z" AttributeDataType="xs:double" Unit="mm">
+              <Description>Z-Position of Connection</Description>
+            </Attribute>
+          </Attribute>
+        </ExternalInterface>
+        <ExternalInterface Name="ProcessWaterIn" ID="84f98ef9-9b83-40f0-b902-0ad3a1010563" RefBaseClassPath="InterfaceElektrolysisSystemClassLib/MediaSupply">
+          <Attribute Name="ConnectionType" AttributeDataType="xs:string" RefAttributeType="ElectrolyzerAttributeTypeLib/ConnectionType" Unit="">
+            <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+              <Description>Welded, screwed etc.</Description>
+              <Value>Pressverbindung</Value>
+            </Attribute>
+            <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+              <Description>HoseDiameter</Description>
+              <DefaultValue>0</DefaultValue>
+              <Value>25</Value>
+            </Attribute>
+            <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+              <Value>In</Value>
+              <Constraint Name="AllowedValues">
+                <NominalScaledType>
+                  <RequiredValue>In</RequiredValue>
+                  <RequiredValue>Out</RequiredValue>
+                  <RequiredValue>InOut</RequiredValue>
+                </NominalScaledType>
+              </Constraint>
+            </Attribute>
+            <Attribute Name="Material" AttributeDataType="xs:string">
+              <Value>Edelstahl</Value>
+            </Attribute>
+          </Attribute>
+        </ExternalInterface>
+        <SupportedRoleClass RefRoleClassPath="ElektrolyzerRoleClassLib/ElectrolysisSystem/Elektrolyzer" />
+      </SystemUnitClass>
+    </SystemUnitClass>
+  </SystemUnitClassLib>
+  <SystemUnitClassLib Name="ConstructionElements">
+    <Version>0</Version>
+    <SystemUnitClass Name="InitialStructure" ID="c0271e84-5473-418b-8c75-db4653508fe1">
+      <ExternalInterface Name="DocumentInterface" ID="ceef9f96-c965-45c2-af74-93266e8e57e8">
+        <ExternalInterface Name="CADDocument" ID="f05c761a-0307-495c-822d-5061f33b4582" RefBaseClassPath="AutomationMLInterfaceClassLib/AutomationMLBaseInterface/ExternalDataConnector/COLLADAInterface">
+          <Attribute Name="refURI" AttributeDataType="xs:anyURI" RefAttributeType="AutomationMLBaseAttributeTypeLib/refURI">
+            <Value>Container und Parameter/COLLADA_Daten/InitialStructure.dae</Value>
+          </Attribute>
+        </ExternalInterface>
+        <ExternalInterface Name="CADDocumentInventor" ID="9ce1c91d-3ec2-410a-aae0-9bd54df1eca0" RefBaseClassPath="AutomationMLInterfaceClassLib/AutomationMLBaseInterface/ExternalDataConnector/ExternalDataReference">
+          <Attribute Name="refURI" AttributeDataType="xs:anyURI" RefAttributeType="AutomationMLBaseAttributeTypeLib/refURI">
+            <Value>Container und Parameter/InitialStructure.iam</Value>
+          </Attribute>
+          <Attribute Name="MIMEType" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/MIMEType">
+            <Description>Multipurpose Internet Mail Extensions (MIME) sind Erweiterungen des Internetstandards RFC 822 (seit 2008 durch RFC 5322 ersetzt), der das Datenformat von E-Mails definiert</Description>
+            <Value>Any file</Value>
+          </Attribute>
+        </ExternalInterface>
+      </ExternalInterface>
+    </SystemUnitClass>
+    <SystemUnitClass Name="ExtensionStructure" ID="95ad598d-7e0e-4c15-baee-3c944b7eaf90">
+      <ExternalInterface Name="DocumentInterface" ID="0e8e5895-b523-48c1-8f2d-fe31262afb73">
+        <ExternalInterface Name="CADDocument" ID="4a81ef73-2767-4172-8b05-5bfe0f2eede1" RefBaseClassPath="AutomationMLInterfaceClassLib/AutomationMLBaseInterface/ExternalDataConnector/COLLADAInterface">
+          <Attribute Name="refURI" AttributeDataType="xs:anyURI" RefAttributeType="AutomationMLBaseAttributeTypeLib/refURI">
+            <Value>Container und Parameter/COLLADA_Daten/ExtensionStructure.dae</Value>
+          </Attribute>
+        </ExternalInterface>
+        <ExternalInterface Name="CADDocumentInventor" ID="c1c99d93-e189-45bd-af2a-3326cbe37d80" RefBaseClassPath="AutomationMLInterfaceClassLib/AutomationMLBaseInterface/ExternalDataConnector/ExternalDataReference">
+          <Attribute Name="refURI" AttributeDataType="xs:anyURI" RefAttributeType="AutomationMLBaseAttributeTypeLib/refURI">
+            <Value>Container und Parameter/ExtensionStructure.iam</Value>
+          </Attribute>
+          <Attribute Name="MIMEType" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/MIMEType">
+            <Description>Multipurpose Internet Mail Extensions (MIME) sind Erweiterungen des Internetstandards RFC 822 (seit 2008 durch RFC 5322 ersetzt), der das Datenformat von E-Mails definiert</Description>
+            <Value>Any file</Value>
+          </Attribute>
+        </ExternalInterface>
+      </ExternalInterface>
+    </SystemUnitClass>
+  </SystemUnitClassLib>
+  <AttributeTypeLib Name="AutomationMLBaseAttributeTypeLib">
+    <Description>Standard Automation Markup Language Attribute Type Library</Description>
+    <Version>1.0</Version>
+    <AttributeType Name="Direction" AttributeDataType="xs:string">
+      <Constraint Name="AllowedValues">
+        <NominalScaledType>
+          <RequiredValue>In</RequiredValue>
+          <RequiredValue>Out</RequiredValue>
+          <RequiredValue>InOut</RequiredValue>
+        </NominalScaledType>
+      </Constraint>
+    </AttributeType>
+    <AttributeType Name="Cardinality">
+      <Attribute Name="MinOccur" AttributeDataType="xs:unsignedInt" />
+      <Attribute Name="MaxOccur" AttributeDataType="xs:unsignedInt" />
+    </AttributeType>
+    <AttributeType Name="Category" AttributeDataType="xs:string" />
+    <AttributeType Name="refURI" AttributeDataType="xs:anyURI" />
+    <AttributeType Name="AssociatedFacet" AttributeDataType="xs:string" />
+    <AttributeType Name="ListType" />
+    <AttributeType Name="OrderedListType" />
+    <AttributeType Name="LocalizedAttribute" AttributeDataType="xs:string" />
+    <AttributeType Name="AssociatedValue" />
+    <AttributeType Name="MIMEType" AttributeDataType="xs:string">
+      <Description>Multipurpose Internet Mail Extensions (MIME) sind Erweiterungen des Internetstandards RFC 822 (seit 2008 durch RFC 5322 ersetzt), der das Datenformat von E-Mails definiert</Description>
+    </AttributeType>
+    <AttributeType Name="DocLang" AttributeDataType="xs:string" />
+  </AttributeTypeLib>
+  <AttributeTypeLib Name="ElectrolyzerAttributeTypeLib">
+    <Version>0</Version>
+    <AttributeType Name="ComponentDimension" AttributeDataType="xs:string">
+      <Attribute Name="Heigth" AttributeDataType="xs:double" Unit="mm">
+        <Description>Heigth of an object</Description>
+        <DefaultValue>0</DefaultValue>
+      </Attribute>
+      <Attribute Name="Length" AttributeDataType="xs:double" Unit="mm">
+        <Description>Length of an object</Description>
+        <DefaultValue>0</DefaultValue>
+      </Attribute>
+      <Attribute Name="Width" AttributeDataType="xs:double" Unit="mm">
+        <Description>Width of an object</Description>
+        <DefaultValue>0</DefaultValue>
+      </Attribute>
+    </AttributeType>
+    <AttributeType Name="ConnectionType" AttributeDataType="xs:string" Unit="">
+      <Description></Description>
+      <Attribute Name="AssamblyType" AttributeDataType="xs:string">
+        <Description>Welded, screwed etc.</Description>
+      </Attribute>
+      <Attribute Name="Diameter" AttributeDataType="xs:double" Unit="mm">
+        <Description>HoseDiameter</Description>
+        <DefaultValue>0</DefaultValue>
+      </Attribute>
+      <Attribute Name="Direction" AttributeDataType="xs:string" RefAttributeType="AutomationMLBaseAttributeTypeLib/Direction">
+        <Constraint Name="AllowedValues">
+          <NominalScaledType>
+            <RequiredValue>In</RequiredValue>
+            <RequiredValue>Out</RequiredValue>
+            <RequiredValue>InOut</RequiredValue>
+          </NominalScaledType>
+        </Constraint>
+      </Attribute>
+      <Attribute Name="Length" AttributeDataType="xs:double" Unit="mm">
+        <Description>Length of line</Description>
+      </Attribute>
+      <Attribute Name="Material" AttributeDataType="xs:string">
+        <DefaultValue></DefaultValue>
+        <Value></Value>
+      </Attribute>
+    </AttributeType>
+    <AttributeType Name="ConnectionPosition" AttributeDataType="xs:string">
+      <Description>Connection Position</Description>
+      <Attribute Name="X" AttributeDataType="xs:double" Unit="mm">
+        <Description>X-Position of Connection</Description>
+      </Attribute>
+      <Attribute Name="Y" AttributeDataType="xs:double" Unit="mm">
+        <Description>Y-Position of Connection</Description>
+      </Attribute>
+      <Attribute Name="Z" AttributeDataType="xs:double" Unit="mm">
+        <Description>Z-Position of Connection</Description>
+      </Attribute>
+    </AttributeType>
+    <AttributeType Name="FlowRate" AttributeDataType="xs:double" Unit="m³/h" />
+    <AttributeType Name="TechnicalAttributesEl" AttributeDataType="xs:string">
+      <Attribute Name="AmbientOperativeHumidityRange" AttributeDataType="xs:string" />
+      <Attribute Name="CoolingWaterFlow" AttributeDataType="xs:double" Unit="L/h" />
+      <Attribute Name="CoolingWaterTempRange" AttributeDataType="xs:int" Unit="°C" />
+      <Attribute Name="CoolingWaterPressureRange" AttributeDataType="xs:double" Unit="bar" />
+      <Attribute Name="MaxHeatDissipation" AttributeDataType="xs:double" Unit="kW">
+        <Description>ambient and cooling line</Description>
+      </Attribute>
+      <Attribute Name="MaxWaterConductivity" AttributeDataType="xs:string" Unit="µS/cm at 25°C" />
+      <Attribute Name="NominalPowerConsumption" AttributeDataType="xs:double" Unit="kWh/Nm³">
+        <Description>Nominal power consumption per Nm³ of H₂ produced</Description>
+      </Attribute>
+      <Attribute Name="OperativeTempRange" AttributeDataType="xs:int" Unit="°C" />
+      <Attribute Name="PowerConsumption" AttributeDataType="xs:double" Unit="kW" />
+      <Attribute Name="PowerSupply" AttributeDataType="xs:double" Unit="V" />
+      <Attribute Name="ProductionRate" AttributeDataType="xs:double" Unit="Nm³/h" />
+      <Attribute Name="UnitsInsideContainer" AttributeDataType="xs:int" Unit="U" />
+      <Attribute Name="WasteWaterOutput" AttributeDataType="xs:double" Unit="L/h" />
+      <Attribute Name="WaterConsumption" AttributeDataType="xs:double" Unit="mL/h" />
+      <Attribute Name="WaterInputPressureRange" AttributeDataType="xs:double" Unit="bar" />
+      <Attribute Name="Weight" AttributeDataType="xs:double" Unit="kg" />
+    </AttributeType>
+    <AttributeType Name="TechnicalAttributesBoP" AttributeDataType="xs:string">
+      <Attribute Name="AmbientOperativeHumidityRange" AttributeDataType="xs:string" />
+      <Attribute Name="Capacity" AttributeDataType="xs:double" Unit="L" />
+      <Attribute Name="Efficiency" AttributeDataType="xs:int" Unit="%" />
+      <Attribute Name="HydrogenFlowRate" AttributeDataType="xs:double" Unit="NL/h" />
+      <Attribute Name="HydrogenOutputPurity" AttributeDataType="xs:double" Unit="%" />
+      <Attribute Name="InFlowRate" AttributeDataType="xs:double" Unit="L/min">
+        <Description>Maximum inletwater flow requirement</Description>
+      </Attribute>
+      <Attribute Name="InPressure" AttributeDataType="xs:double" Unit="bar" />
+      <Attribute Name="MinInPurity" AttributeDataType="xs:double" Unit="%" />
+      <Attribute Name="OperativeTempRange" AttributeDataType="xs:int" Unit="°C" />
+      <Attribute Name="OutFlowRate" AttributeDataType="xs:double" Unit="L/min">
+        <Description>Maximum outlet water flow rate</Description>
+      </Attribute>
+      <Attribute Name="OutPressure" AttributeDataType="xs:double" Unit="bar" />
+      <Attribute Name="PowerConsumption" AttributeDataType="xs:double" Unit="kW" />
+      <Attribute Name="PowerSupply" AttributeDataType="xs:string" Unit="V" />
+      <Attribute Name="UnitsInsideContainer" AttributeDataType="xs:int" Unit="U" />
+      <Attribute Name="StandbyPowerConsumption" AttributeDataType="xs:double" Unit="W" />
+      <Attribute Name="WaterConductivity" AttributeDataType="xs:string" Unit="µS/cm at 25°C" />
+      <Attribute Name="Weight" AttributeDataType="xs:double" Unit="kg" />
+    </AttributeType>
+    <AttributeType Name="Volume" AttributeDataType="xs:double" Unit="m³">
+      <Description>Storage-Volume</Description>
+      <DefaultValue>0</DefaultValue>
+      <Value>0</Value>
+    </AttributeType>
+    <AttributeType Name="SafteyZone" AttributeDataType="xs:string">
+      <Attribute Name="RectSafteyZone" AttributeDataType="xs:double" Unit="m">
+        <Description>Rectangular around the container/Distance from container wall</Description>
+      </Attribute>
+      <Attribute Name="CircSaftyZone" AttributeDataType="xs:double">
+        <Description>Circular around the container/Distance from container wall</Description>
+      </Attribute>
+    </AttributeType>
+  </AttributeTypeLib>
+  <AttributeTypeLib Name="ContainerAttributeTypeLib">
+    <Version>0</Version>
+    <AttributeType Name="ComponentDimension" AttributeDataType="xs:string">
+      <Attribute Name="Heigth" AttributeDataType="xs:double" Unit="mm">
+        <Description>Heigth of an object</Description>
+        <DefaultValue>0</DefaultValue>
+      </Attribute>
+      <Attribute Name="Length" AttributeDataType="xs:double" Unit="mm">
+        <Description>Length of an object</Description>
+        <DefaultValue>0</DefaultValue>
+      </Attribute>
+      <Attribute Name="Width" AttributeDataType="xs:double" Unit="mm">
+        <Description>Width of an object</Description>
+        <DefaultValue>0</DefaultValue>
+      </Attribute>
+    </AttributeType>
+    <AttributeType Name="Weight" AttributeDataType="xs:string">
+      <Attribute Name="DeadWeight" AttributeDataType="xs:double" Unit="kg" />
+      <Attribute Name="MaxWeight" AttributeDataType="xs:double" Unit="kg" />
+    </AttributeType>
+  </AttributeTypeLib>
+</CAEXFile>

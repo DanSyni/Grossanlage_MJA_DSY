@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ParamWithValueList xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <version>20080502</version>
+  <parameterTypes>
+    <ParamType>
+      <typeName>Inventor</typeName>
+      <typeCode>0</typeCode>
+    </ParamType>
+    <ParamType>
+      <typeName>String</typeName>
+      <typeCode>1</typeCode>
+    </ParamType>
+    <ParamType>
+      <typeName>Boolean</typeName>
+      <typeCode>2</typeCode>
+    </ParamType>
+  </parameterTypes>
+  <parameters>
+    <ParamWithValue>
+      <name>YNitrogenIn1</name>
+      <typeCode>mm</typeCode>
+      <value>675.000 mm</value>
+      <comment />
+      <isKey>true</isKey>
+    </ParamWithValue>
+    <ParamWithValue>
+      <name>XProcessWaterIn</name>
+      <typeCode>mm</typeCode>
+      <value>967.000 mm</value>
+      <comment />
+      <isKey>true</isKey>
+    </ParamWithValue>
+    <ParamWithValue>
+      <name>XCoolingIn</name>
+      <typeCode>mm</typeCode>
+      <value>1501.000 mm</value>
+      <comment />
+      <isKey>true</isKey>
+    </ParamWithValue>
+    <ParamWithValue>
+      <name>XPowerSupplyIn</name>
+      <typeCode>mm</typeCode>
+      <value>2035.000 mm</value>
+      <comment />
+      <isKey>true</isKey>
+    </ParamWithValue>
+    <ParamWithValue>
+      <name>XHydrogenOut</name>
+      <typeCode>mm</typeCode>
+      <value>433.000 mm</value>
+      <comment />
+      <isKey>true</isKey>
+    </ParamWithValue>
+    <ParamWithValue>
+      <name>YHydrogenOut</name>
+      <typeCode>mm</typeCode>
+      <value>2365.000 mm</value>
+      <comment />
+      <isKey>true</isKey>
+    </ParamWithValue>
+    <ParamWithValue>
+      <name>XCathodenWaterOut</name>
+      <typeCode>mm</typeCode>
+      <value>967.000 mm</value>
+      <comment />
+      <isKey>true</isKey>
+    </ParamWithValue>
+    <ParamWithValue>
+      <name>YCathodenWaterOut</name>
+      <typeCode>mm</typeCode>
+      <value>2365.000 mm</value>
+      <comment />
+      <isKey>true</isKey>
+    </ParamWithValue>
+    <ParamWithValue>
+      <name>XCoolingOut</name>
+      <typeCode>mm</typeCode>
+      <value>1501.000 mm</value>
+      <comment />
+      <isKey>true</isKey>
+    </ParamWithValue>
+    <ParamWithValue>
+      <name>YCoolingOut</name>
+      <typeCode>mm</typeCode>
+      <value>2365.000 mm</value>
+      <comment />
+      <isKey>true</isKey>
+    </ParamWithValue>
+    <ParamWithValue>
+      <name>DNitrogenIn1</name>
+      <typeCode>mm</typeCode>
+      <value>10.000 mm</value>
+      <comment />
+      <isKey>true</isKey>
+    </ParamWithValue>
+    <ParamWithValue>
+      <name>DProcessWaterIn</name>
+      <typeCode>mm</typeCode>
+      <value>25.000 mm</value>
+      <comment />
+      <isKey>true</isKey>
+    </ParamWithValue>
+    <ParamWithValue>
+      <name>DCoolingIn</name>
+      <typeCode>mm</typeCode>
+      <value>100.000 mm</value>
+      <comment />
+      <isKey>true</isKey>
+    </ParamWithValue>
+    <ParamWithValue>
+      <name>DPowerSupplyIn</name>
+      <typeCode>mm</typeCode>
+      <value>50.000 mm</value>
+      <comment />
+      <isKey>true</isKey>
+    </ParamWithValue>
+    <ParamWithValue>
+      <name>DHydrogenOut</name>
+      <typeCode>mm</typeCode>
+      <value>25.000 mm</value>
+      <comment />
+      <isKey>true</isKey>
+    </ParamWithValue>
+    <ParamWithValue>
+      <name>DCathodenWaterOut</name>
+      <typeCode>mm</typeCode>
+      <value>32.000 mm</value>
+      <comment />
+      <isKey>true</isKey>
+    </ParamWithValue>
+    <ParamWithValue>
+      <name>DCoolingOut</name>
+      <typeCode>mm</typeCode>
+      <value>100.000 mm</value>
+      <comment />
+      <isKey>true</isKey>
+    </ParamWithValue>
+    <ParamWithValue>
+      <name>DNitrogenIn2</name>
+      <typeCode>mm</typeCode>
+      <value>10.000 mm</value>
+      <comment />
+      <isKey>true</isKey>
+    </ParamWithValue>
+    <ParamWithValue>
+      <name>XNitrogenIn2</name>
+      <typeCode>mm</typeCode>
+      <value>433.000 mm</value>
+      <comment />
+      <isKey>true</isKey>
+    </ParamWithValue>
+    <ParamWithValue>
+      <name>YNitrogenIn2</name>
+      <typeCode>mm</typeCode>
+      <value>325.000 mm</value>
+      <comment />
+      <isKey>true</isKey>
+    </ParamWithValue>
+    <ParamWithValue>
+      <name>XNitrogenIn1</name>
+      <typeCode>mm</typeCode>
+      <value>433.000 mm</value>
+      <comment />
+      <isKey>true</isKey>
+    </ParamWithValue>
+    <ParamWithValue>
+      <name>YWasteWaterOut</name>
+      <typeCode>mm</typeCode>
+      <value>2365.000 mm</value>
+      <comment />
+      <isKey>true</isKey>
+    </ParamWithValue>
+    <ParamWithValue>
+      <name>XWasteWaterOut</name>
+      <typeCode>mm</typeCode>
+      <value>2035.000 mm</value>
+      <comment />
+      <isKey>true</isKey>
+    </ParamWithValue>
+    <ParamWithValue>
+      <name>DWasteWaterOut</name>
+      <typeCode>mm</typeCode>
+      <value>5.000 mm</value>
+      <comment />
+      <isKey>true</isKey>
+    </ParamWithValue>
+    <ParamWithValue>
+      <name>YProcessWaterIn</name>
+      <typeCode>mm</typeCode>
+      <value>325.000 mm</value>
+      <comment />
+      <isKey>true</isKey>
+    </ParamWithValue>
+    <ParamWithValue>
+      <name>YCoolingIn</name>
+      <typeCode>mm</typeCode>
+      <value>325.000 mm</value>
+      <comment />
+      <isKey>true</isKey>
+    </ParamWithValue>
+    <ParamWithValue>
+      <name>YPowerSupplyIn</name>
+      <typeCode>mm</typeCode>
+      <value>325.000 mm</value>
+      <comment />
+      <isKey>true</isKey>
+    </ParamWithValue>
+  </parameters>
+</ParamWithValueList>

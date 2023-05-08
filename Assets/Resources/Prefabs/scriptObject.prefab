@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &957308797862819804
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 957308797862819807}
+  - component: {fileID: 957308797862819806}
+  - component: {fileID: 957308797862819805}
+  m_Layer: 0
+  m_Name: scriptObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &957308797862819807
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 957308797862819804}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 440.60004, y: 223.4, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &957308797862819806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 957308797862819804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc23b70baf752ac45841789350c1eb91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  amlPath: {fileID: 0}
+  gui_Eingabe: {fileID: 0}
+  help_window: {fileID: 0}
+  amlStart: {fileID: 0}
+  menu_dropdown: {fileID: 0}
+  amlAdapter: {fileID: 0}
+  saveInputs: {fileID: 957308797862819805}
+--- !u!114 &957308797862819805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 957308797862819804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8748ee69e2bb6e4ab48c9573bb3fdf9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  electrolyzerPower: {fileID: 0}
+  electricityAvailability: {fileID: 0}
+  width: {fileID: 0}
+  length: {fileID: 0}
+  waterAvailability: {fileID: 0}
+  valElectricity: {fileID: 0}
+  valElectrolyzer: {fileID: 0}
+  valWidth: {fileID: 0}
+  valLength: {fileID: 0}
+  valWater: {fileID: 0}
+  valEverything: {fileID: 0}
