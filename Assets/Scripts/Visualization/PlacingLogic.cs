@@ -21,7 +21,7 @@ public class PlacingLogic : MonoBehaviour
         containers.transform.SetParent(hierarchyParent.transform);
         structures = new GameObject("Structures");
         structures.transform.SetParent(hierarchyParent.transform);
-        TooltipSystem.Hide();
+        //TooltipSystem.Hide();
     }
     public void Start()
     {
@@ -58,13 +58,40 @@ public class PlacingLogic : MonoBehaviour
             //currentRb.useGravity = false;
             BoxCollider currentBc = prefab.AddComponent<BoxCollider>();
             TooltipTrigger currentSc = prefab.AddComponent<TooltipTrigger>();
+            
+             currentRb.isKinematic = true;
+            //currentSc.header = "Hallo";
+            //currentSc.content = "Lukas";
+            currentSc.header = containerName;
+            var attList = new List<string>();
 
-            
-            
-                currentSc.header = "Hallo";
-                currentSc.content = "Lukas";
+            switch (containerName)
+            {
+                case "PowerSupply":
+                    attList = amlAdapter.GetAllAttributes("PowerSupply");
+                    break;
 
-            
+                case "EnapterSkid":
+                    attList = amlAdapter.GetAllAttributes("EnapterSkid");
+                    break;
+
+                case "GasSystem":
+                    attList = amlAdapter.GetAllAttributes("GasSystem");
+                    break;
+
+                case "WaterSupply":
+                    attList = amlAdapter.GetAllAttributes("WaterSupply");
+                    break;
+
+                case "CoolingSystem":
+                    attList = amlAdapter.GetAllAttributes("CoolingSystem");
+                    break;
+
+            }
+              
+            for(int i = 0; i < attList.Count; i ++){
+                currentSc.content = currentSc.content + attList[i] + "\n";
+            }
         }
 
         else
@@ -75,8 +102,42 @@ public class PlacingLogic : MonoBehaviour
             //currentRb.useGravity = false;
             BoxCollider currentBc = prefab.AddComponent<BoxCollider>();
             TooltipTrigger currentSc = prefab.AddComponent<TooltipTrigger>();
-            currentSc.header = "Hallo";
-            currentSc.content = "Lukas";
+            //currentSc.header = "Hallo";
+            //currentSc.content = "Lukas";
+            currentRb.isKinematic = true;
+
+            currentSc.header = containerName;
+            var attList = new List<string>();
+
+            switch (containerName)
+            {
+                case "PowerSupply":
+                    attList = amlAdapter.GetAllAttributes("PowerSupply");
+                    break;
+
+                case "EnapterSkid":
+                    attList = amlAdapter.GetAllAttributes("EnapterSkid");
+                    break;
+
+                case "GasSystem":
+                    attList = amlAdapter.GetAllAttributes("GasSystem");
+                    break;
+
+                case "WaterSupply":
+                    attList = amlAdapter.GetAllAttributes("WaterSupply");
+                    break;
+
+                case "CoolingSystem":
+                    attList = amlAdapter.GetAllAttributes("CoolingSystem");
+                    break;
+
+            }
+
+            for (int i = 0; i < attList.Count; i++)
+            {
+                currentSc.content = currentSc.content + attList[i] + "\n";
+            }
+
         }
         
     }

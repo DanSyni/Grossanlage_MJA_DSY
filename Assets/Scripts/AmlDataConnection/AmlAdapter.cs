@@ -325,6 +325,46 @@ public class AmlAdapter : MonoBehaviour
     }
 
     /// <summary>
+    /// Returns all attributes of the Aml element specified by its name.
+    /// </summary>
+    /// <param name="elementName">The name of the element to be searched.</param>
+    /// <param name="attributeName">The name of the attribute.</param>
+    /// <returns>The attribute or null if it could not be found.</returns>
+    public List<string> GetAllAttributes(string elementName)
+    {
+        var attList = new List<string>();
+        var attValueList = new List<string>();
+        if (elementName == null) return null;
+        if (!HasValidAmlDocument())
+        {
+            HandleNoDocument();
+            return null;
+        }
+        var element = SearchElement(elementName);
+        if (element == null) return null;
+
+        foreach (var attribute in element.AttributeAndDescendants)
+        {
+            var currentAtt = GetAttribute(element, attribute.Name);
+            var currentValue = currentAtt.Value;
+            var currentUnit = currentAtt.Unit;
+            if (currentValue == null)
+            {
+                currentValue = "0";
+            }
+            if (currentUnit == null)
+            {
+                currentUnit = "";
+            }
+            string currentAttString = currentAtt.ToString();
+            string currentValueString = currentValue.ToString();
+            string currentUnitString = currentUnit.ToString();
+            attList.Add(currentAttString+": "+currentValueString + " "+ currentUnitString);
+        }
+        return attList;
+    }
+
+    /// <summary>
     /// Returns the ExternalInterfaceType specified by the parameters.
     /// </summary>
     /// <param name="nameOfParent">The name of the parent element to be searched.</param>
