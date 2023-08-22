@@ -94,7 +94,7 @@ public class Visualization : MonoBehaviour
         double maxSecurityDistance = 0;
         foreach (string amlName in amlNames.Values)
         {
-            const string attributeName = "RectSafteyZone";
+            const string attributeName = "RectSafetyZone";
             AttributeType attribute = amlAdapter.GetAttribute(amlName, attributeName);
             if (attribute == null) continue;
 
@@ -287,7 +287,7 @@ public class Visualization : MonoBehaviour
         int countGPContainers = CalculateTotalContainerCount(list,"containerGPCount");
         int countCLContainers = CalculateTotalContainerCount(list,"containerCLCount");
         int countPSContainers = CalculateTotalContainerCount(list,"containerPSCount");
-        if (countContainers == 0) visualizationWarnings.DisplayWarning("Keine Container können durch die Restriktionen versorgt werden");
+        if (countContainers == 0) visualizationWarnings.DisplayWarning("Keine Container kÃ¶nnen durch die Restriktionen versorgt werden");
 
         //init values needed in the algorithm
         double securityDistance = CalculateMaxSecurityDistance();
@@ -348,7 +348,7 @@ public class Visualization : MonoBehaviour
         if (countAllColumns < 1)
         {
             Debug.Log("There is not enough space for at least one column of containers.");
-            visualizationWarnings.DisplayWarning("Die Anlagenlänge reicht nicht aus");
+            visualizationWarnings.DisplayWarning("Die AnlagenlÃ¤nge reicht nicht aus");
             return;
         }
 
@@ -496,7 +496,7 @@ public class Visualization : MonoBehaviour
         //catch insufficient plant length 
         if (plantLength == 0) {
             Debug.Log("The plant length is not sufficient for one row.");
-            visualizationWarnings.DisplayWarning("Die Anlagenlänge reicht nicht aus");
+            visualizationWarnings.DisplayWarning("Die AnlagenlÃ¤nge reicht nicht aus");
             return;
         }
 
